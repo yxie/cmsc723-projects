@@ -1,0 +1,112 @@
+Team: 
+1- 
+2- 
+3-
+
+Email: 
+
+---------------------------------------------------------------------------------
+Part 1)
+
+1- baseline accuracy = ?%
+2- Cohen’s Kappa = ?
+
+---------------------------------------------------------------------------------
+Part 2)
+1- 
+
+s   | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+c(s)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+s        | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+c(s,time)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+s        | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+c(s,loss)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+s          | cord | division   | formation | phone | product | text
+---------------------------------------------------------------------
+c(s,export)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+
+2-
+
+s   | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+p(s)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+s        | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+p(s|time)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+s        | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+p(s|loss)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+s          | cord | division   | formation | phone | product | text
+---------------------------------------------------------------------
+p(s|export)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+
+3- for the sentence X = "and i can tell you that i 'm an absolute nervous wreck every time she performs . i have her practice the last two lines on each page , so I can learn exactly when to turn the page -- just one of the tricks to this trade that i 've learned the hard way ."
+
+s     | cord | division   | formation | phone | product | text
+-----------------------------------------------------------------
+p(s|X)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+
+4- classifier f-measures on the test set:
+micro averaged = 
+macro averaged = 
+
+5- 
+
+---------------------------------------------------------------------------------
+Part 3)
+
+1- 
+2- comma separated accuracies (e.g. 30,35,60): 
+3- classifier f-measures on the test set:
+micro averaged = 
+macro averaged = 
+4- 
+---------------------------------------------------------------------------------
+Part 4)
+A) Feature A:
+
+1- Description
+
+2- naive-bayes f-measures on the test set:
+micro averaged = 
+macro averaged = 
+
+3- perceptron f-measures on the test set:
+micro averaged = 
+macro averaged = 
+
+
+4- Conclusions:
+
+B) Feature B:
+
+1- Description
+
+2- naive-bayes f-measures on the test set:
+micro averaged = 
+macro averaged = 
+
+3- perceptron f-measures on the test set:
+micro averaged = 
+macro averaged = 
+
+
+4- Conclusions:
+
+
