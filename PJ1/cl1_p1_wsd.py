@@ -16,6 +16,7 @@ Project 1: Implementing Word Sense Disambiguation Systems
 
 """
 import nltk 
+import sklearn
 def read_dataset(subset):
 	labels = []
 	texts = []
@@ -123,6 +124,16 @@ def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labe
 	"""
 	pass
 
+"""
+Baseline classifier: most frequent label
+"""
+def run_baseline_classifier(train_texts, train_targets,train_labels,
+                dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
+    most_freq_label = nltk.FreqDist(train_labels).most_common(1)[0][0]
+    print('Most frequent label', most_freq_label)
+    predicted_labels = [most_freq_label] * len(test_labels)
+    accuracy = sklearn.metrics.accuracy_score(test_labels, predicted_labels)
+    return accuracy
 
 if __name__ == "__main__":
     # reading, tokenizing, and normalizing data
@@ -131,6 +142,11 @@ if __name__ == "__main__":
     test_labels, test_targets, test_texts = read_dataset('test')
 
     #running the classifier
+    accuracy_baseline = run_baseline_classifier(train_texts, train_targets, train_labels,
+                dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+
+    print('Test accuracy for baseline classifier', accuracy_baseline)
+
     test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
 				dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
