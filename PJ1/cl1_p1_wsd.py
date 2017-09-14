@@ -5,17 +5,17 @@ Project 1: Implementing Word Sense Disambiguation Systems
 
 
 """
- read one of train, dev, test subsets 
- 
+ read one of train, dev, test subsets
+
  subset - one of train, dev, test
- 
+
  output is a tuple of three lists
  	labels: one of the 6 possible senses <cord, division, formation, phone, product, text >
  	targets: the index within the text of the token to be disambiguated
  	texts: a list of tokenized and normalized text input (note that there can be multiple sentences)
 
 """
-import nltk 
+import nltk
 import sklearn
 import math
 import numpy as np
@@ -74,7 +74,7 @@ Trains a naive bayes model with bag of words features and computes the accuracy 
 train_texts, train_targets, train_labels are as described in read_dataset above
 The same thing applies to the reset of the parameters.
 """
-def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
+def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
     """
     **Your final classifier implementation of part 2 goes here**
@@ -89,7 +89,7 @@ train_texts, train_targets, train_labels are as described in read_dataset above
 The same thing applies to the reset of the parameters.
 
 """
-def run_bow_perceptron_classifier(train_texts, train_targets,train_labels, 
+def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
 	"""
 	**Your final classifier implementation of part 3 goes here**
@@ -99,14 +99,14 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
 
 
 """
-Trains a naive bayes model with bag of words features  + two additional features 
+Trains a naive bayes model with bag of words features  + two additional features
 and computes the accuracy on the test set
 
 train_texts, train_targets, train_labels are as described in read_dataset above
 The same thing applies to the reset of the parameters.
 
 """
-def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labels, 
+def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labels,
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
 	"""
 	**Your final implementation of Part 4 with perceptron classifier**
@@ -114,14 +114,14 @@ def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labe
 	pass
 
 """
-Trains a perceptron model with bag of words features  + two additional features 
+Trains a perceptron model with bag of words features  + two additional features
 and computes the accuracy on the test set
 
 train_texts, train_targets, train_labels are as described in read_dataset above
 The same thing applies to the reset of the parameters.
 
 """
-def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labels, 
+def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labels,
 				dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
 	"""
 	**Your final implementation of Part 4 with perceptron classifier**
@@ -143,7 +143,7 @@ def run_baseline_classifier(train_texts, train_targets,train_labels,
 """
 Part 2.1 & 2.2
 """
-def run_part2_context_words(train_texts, train_targets, train_labels, 
+def run_part2_context_words(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
     # Compute count(s, w): for sense s, how many times that context word w appears in the train_texts
     # Compute count(s, all_w) = sum_j' count(s, j'): for sense s, how many context words in total appearing in the train_texts
@@ -151,19 +151,24 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
     context_words = ['time', 'loss', 'export']
     count_s_w = dict()
     count_s_all_w = dict()
+    # Initialization
+    for sense in senses:
+        count_s_all_w[sense] = 0
+        for word in context_words:
+            count_s_w[(sense, word)] = 0
+        count_s_w[(sense, 'other')] = 0\
+    # Start counting
     for i in range(len(train_texts)):
         text = train_texts[i]
         sense = train_labels[i]
+        count_s_all_w[sense] += len(text)
+        count_other = len(text)
         for word in context_words:
             val = text.count(word)
-            if (sense, word) in count_s_w:
-                count_s_w[(sense, word)] += val
-            else:
-                count_s_w[(sense, word)] = val
-            if sense in count_s_all_w:
-                count_s_all_w[sense] += val
-            else:
-                count_s_all_w[sense] = val
+            count_other -= val
+            count_s_w[(sense, word)] += val
+        count_s_w[(sense, 'other')] += count_other
+
     # Compute count(s): the number of texts that have sense s
     count_s = dict()
     for sense in senses:
@@ -172,6 +177,7 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
     print "\nSolution to Part 2.1"
     pp.pprint(count_s_w)
     pp.pprint(count_s)
+    pp.pprint(count_s_all_w)
 
     # Compute p(s): probability that a text will have sense s
     # Compute p(w|s): probability that context word j will appear in a text that has sense y for 'line'
@@ -181,6 +187,7 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
         prob_s[sense] = float(count_s[sense]) / len(train_labels)
         for word in context_words:
             prob_w_given_s[(sense, word)] = float(count_s_w[(sense, word)]) / count_s_all_w[sense]
+        prob_w_given_s[(sense, 'other')] = float(count_s_w[(sense, 'other')]) / count_s_all_w[sense]
     # Solution to Part 2.2
     print "\nSolution to Part 2.2"
     pp.pprint(prob_s)
@@ -192,7 +199,9 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
     for sense in senses:
         for word in context_words:
             prob_sum += prob_w_given_s[(sense, word)] * prob_s[sense]
+        prob_sum += prob_w_given_s[(sense, 'other')] * prob_s[sense]
     print prob_sum
+    raw_input("Press to continue")
     """
 
     # Test first sample of dev set
@@ -202,8 +211,8 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
     prob_x_given_s = dict()
     prob_x = 0
     for sense in senses:
-        prob_x_given_s[sense] = get_prob_bow_given_sense(
-            context_words, 
+        prob_x_given_s[sense] = get_prob_text_given_sense(
+            context_words,
             sample_text_vec,
             sense,
             prob_w_given_s
@@ -217,19 +226,21 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
     pp.pprint(prob_s_given_x)
 
     # Verify total probability sums to 1
-    """
     prob_sum = 0
     for sense in senses:
         prob_sum += prob_s_given_x[sense]
     print prob_sum
-    """
-    
+    raw_input("Press to continue")
 
-def get_prob_bow_given_sense(bag_of_words, bow_vec, sense, prob_w_given_s):
+
+def get_prob_text_given_sense(context_words, text, sense, prob_w_given_s):
     result = 1.0
-    for i in range(len(bow_vec)):
-        word = bag_of_words[i]
-        result *= pow(prob_w_given_s[(sense, word)], bow_vec[i])
+    for word in text:
+        if word in context_words:
+            p = prob_w_given_s[(sense, word)]
+        else:
+            p = prob_w_given_s[(sense, 'other')]
+        result *= p
     return result
 
 
@@ -249,8 +260,7 @@ if __name__ == "__main__":
 				dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
     print test_scores
 
-    
-    test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels, 
+
+    test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print test_scores
-    
