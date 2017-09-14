@@ -76,7 +76,7 @@ The same thing applies to the reset of the parameters.
 """
 def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
-       # Compute count(s, w): for sense s, how many times that context word w appears in the train_texts
+    # Compute count(s, w): for sense s, how many times that context word w appears in the train_texts
     # Compute count(s, all_w) = sum_j' count(s, j'): for sense s, how many context words in total appearing in the train_texts
     senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
     context_words = list(set([word for text in train_texts for word in text]))
@@ -105,7 +105,10 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
     # prob_s = dict()
     # prob_w_given_s = dict()
     weight_s = [] # Dimention = #sense * (#context_words + 1)
-    alpha = 1 # smoothing constant
+    alpha = 0.1 # smoothing constant
+	# alpha = 1, accuracy = 76.7%
+	# alpha = 0.5, accuracy = 84.1%
+	# alpha = 0.1, accuracy = 85.9%
     for sense in senses:
         weight = []
         for word in context_words:
