@@ -70,6 +70,19 @@ def write_predictions(predictions, file_name):
             outh.write(p+'\n')
 
 """
+Create a vocabulary based on window size
+"""
+def create_vocabulary(train_texts, train_targets, window_size):
+    vocabulary = []
+    for i in range(len(train_texts)):
+        text = train_texts[i]
+        target = train_targets[i]
+        index_left = max(0, target - window_size)
+        index_right = min(len(text) - 1, target + window_size)
+        vocabulary = vocabulary + text[index_left : index_right]
+    return list(set(vocabulary))
+
+"""
 Trains a naive bayes model with bag of words features and computes the accuracy on the test set
 
 train_texts, train_targets, train_labels are as described in read_dataset above
@@ -80,7 +93,10 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
     # Compute count(s, w): for sense s, how many times that context word w appears in the train_texts
     # Compute count(s, all_w) = sum_j' count(s, j'): for sense s, how many context words in total appearing in the train_texts
     senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
-    context_words = list(set([word for text in train_texts for word in text]))
+    # context_words = list(set([word for text in train_texts for word in text]))
+    window_size = 5
+    context_words = create_vocabulary(train_texts, train_targets, window_size)
+
     count_s_w = dict()
     count_s_all_w = dict()
     # Initialization
@@ -107,9 +123,6 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
     # prob_w_given_s = dict()
     weight_matrix = [] # Dimention = #sense * (#context_words + 1)
     alpha = 0.1 # smoothing constant
-    # alpha = 1, accuracy = 76.7%
-    # alpha = 0.5, accuracy = 84.1%
-    # alpha = 0.1, accuracy = 85.9%
     for sense in senses:
         weight = []
         for word in context_words:
@@ -131,7 +144,7 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
     weight_matrix = np.array(weight_matrix)
     test_text_matrix = np.array(test_text_matrix)
     # Dimention = #test * #sense
-    product = test_text_matrix.dot(weight_s.transpose())
+    product = test_text_matrix.dot(weight_matrix.transpose())
     predicted_labels = []
     for i in range(len(product)):
         index = np.argmax(product[i])
@@ -150,7 +163,10 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
     # Initialization
     senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
-    vocabulary = list(set([word for text in train_texts for word in text]))
+    # vocabulary = list(set([word for text in train_texts for word in text]))
+    window_size = 5
+    vocabulary = create_vocabulary(train_texts, train_targets, window_size)
+
     # Vectorize texts using bag-of-words model
     train_text_matrix = np.array(map(
         lambda text: [text.count(word) for word in vocabulary] + [1],
@@ -406,7 +422,17 @@ if __name__ == "__main__":
 
     run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
         dev_labels, test_texts, test_targets, test_labels)
+
+    test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
+                    dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    print '\nSolution to Part 3.3'
+    print test_score
     """
+
+    test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
+                dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    print '\nSolution to Part 2.4'
+    print test_scores
 
     test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
                     dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
