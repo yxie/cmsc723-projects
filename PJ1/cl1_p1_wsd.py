@@ -196,8 +196,10 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
 
     # Training
     alpha = 1 # learning rate
-    for epoch in range(100):
+    t = 1
+    for iteration in range(1, 101):
         # Update weights based on training data
+        m = np.zeros((len(senses), len(vocabulary) + 1))
         for i in range(len(train_labels)):
             text_vec = train_text_matrix[i]
             correct_label = train_labels[i]
@@ -206,13 +208,22 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
             if predicted_label != correct_label:
                 p_index = senses.index(predicted_label)
                 c_index = senses.index(correct_label)
-                weight_matrix[p_index] = alpha * (weight_matrix[p_index] - text_vec)
-                weight_matrix[c_index] = alpha * (weight_matrix[c_index] + text_vec)
+                weight_matrix[p_index] = weight_matrix[p_index] - alpha * text_vec
+                weight_matrix[c_index] = weight_matrix[c_index] + alpha * text_vec
+                m = m + weight_matrix
+            if (i + 1) % t == 0:
+                m = m / t
+                weight_matrix = m
+                m = np.zeros((len(senses), len(vocabulary) + 1))
         # Evaluate accuracy on training data
         predicted_labels = get_predicted_labels(train_text_matrix, weight_matrix, senses)
         train_score = eval(train_labels, predicted_labels)
-        #print 'Epoch =', epoch, ' iteration = ', i, 'training score = ', train_score
-        print 'Epoch =', epoch, 'training score = ', train_score
+        print 'Iteration =', iteration, 'training score = ', train_score
+        # After every 10 iterations, evaluate accuracy on test data
+        if iteration % 10 == 0:
+            predicted_labels = get_predicted_labels(test_text_matrix, weight_matrix, senses)
+            test_score = eval(test_labels, predicted_labels)
+            print 'Iteration =', iteration, 'test score = ', test_score
 
     # Evaluate accuracy on test data
     predicted_labels = get_predicted_labels(test_text_matrix, weight_matrix, senses)
