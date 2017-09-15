@@ -20,6 +20,7 @@ import sklearn
 import math
 import numpy as np
 import pprint as pp
+import random
 
 def read_dataset(subset):
     labels = []
@@ -104,11 +105,11 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
     # Compute p(w|s): probability that context word j will appear in a text that has sense y for 'line'
     # prob_s = dict()
     # prob_w_given_s = dict()
-    weight_s = [] # Dimention = #sense * (#context_words + 1)
+    weight_matrix = [] # Dimention = #sense * (#context_words + 1)
     alpha = 0.1 # smoothing constant
-	# alpha = 1, accuracy = 76.7%
-	# alpha = 0.5, accuracy = 84.1%
-	# alpha = 0.1, accuracy = 85.9%
+    # alpha = 1, accuracy = 76.7%
+    # alpha = 0.5, accuracy = 84.1%
+    # alpha = 0.1, accuracy = 85.9%
     for sense in senses:
         weight = []
         for word in context_words:
@@ -117,8 +118,8 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
         prob_s = float(count_s[sense]) / len(train_labels)
         bias = math.log(prob_s)
         weight.append(bias)
-        weight_s.append(weight)
-        
+        weight_matrix.append(weight)
+
     # Testing
     # Vectorize text using bag-of-words model and create a matrix
     # Dimension = #test * (#context_words + 1)
@@ -126,8 +127,8 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
     for text in test_texts:
         text_vec = [text.count(word) for word in context_words] + [1]
         test_text_matrix.append(text_vec)
-        
-    weight_s = np.array(weight_s)
+
+    weight_matrix = np.array(weight_matrix)
     test_text_matrix = np.array(test_text_matrix)
     # Dimention = #test * #sense
     product = test_text_matrix.dot(weight_s.transpose())
@@ -137,12 +138,6 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
         sense = senses[index]
         predicted_labels.append(sense)
     return eval(test_labels, predicted_labels)
-    
-    
-    
-        
-            
-    
 
 
 """
@@ -154,13 +149,84 @@ The same thing applies to the reset of the parameters.
 """
 def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
+    # Initialization
+    senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
+    vocabulary = list(set([word for text in train_texts for word in text]))
+
+    # Training text matrix, dimension = #train * (#words + 1)
+    # Randomize order of training texts & labels
+    rand_indices = range(len(train_texts))
+    random.shuffle(rand_indices)
+    train_text_matrix = []
+    train_labels_rand = train_labels
+    for i in range(len(train_texts)):
+        text = train_texts[rand_indices[i]]
+        label = train_labels[rand_indices[i]]
+        text_vec = [text.count(word) for word in vocabulary] + [1]
+        train_text_matrix.append(text_vec)
+        train_labels_rand[i] = label
+    train_text_matrix = np.array(train_text_matrix)
+    train_labels = train_labels_rand
+
     """
-    **Your final classifier implementation of part 3 goes here**
+    train_text_matrix = []
+    for text in train_texts:
+        text_vec = [text.count(word) for word in vocabulary] + [1]
+        train_text_matrix.append(text_vec)
+    train_text_matrix = np.array(train_text_matrix)
     """
-    
-    pass
+
+    # Dev text matrix
+    dev_text_matrix = []
+    for text in dev_texts:
+        text_vec = [text.count(word) for word in vocabulary] + [1]
+        dev_text_matrix.append(text_vec)
+    dev_text_matrix = np.array(dev_text_matrix)
+
+    # Test text matrix
+    test_text_matrix = []
+    for text in test_texts:
+        text_vec = [text.count(word) for word in vocabulary] + [1]
+        test_text_matrix.append(text_vec)
+    test_text_matrix = np.array(test_text_matrix)
+
+    # Weight matrix, dimension = #sense * (vocabulary_size + 1)
+    # Random initialization
+    weight_matrix = np.random.rand(len(senses), len(vocabulary) + 1)
+
+    # Training
+    alpha = 1 # learning rate
+    for epoch in range(100):
+        # Update weights based on training data
+        for i in range(len(train_labels)):
+            text_vec = train_text_matrix[i]
+            correct_label = train_labels[i]
+            product = text_vec.dot(weight_matrix.transpose())
+            predicted_label = senses[np.argmax(product)]
+            if predicted_label != correct_label:
+                p_index = senses.index(predicted_label)
+                c_index = senses.index(correct_label)
+                weight_matrix[p_index] = alpha * (weight_matrix[p_index] - text_vec)
+                weight_matrix[c_index] = alpha * (weight_matrix[c_index] + text_vec)
+        # Evaluate accuracy on training data
+        predicted_labels = get_predicted_labels(train_text_matrix, weight_matrix, senses)
+        train_score = eval(train_labels, predicted_labels)
+        #print 'Epoch =', epoch, ' iteration = ', i, 'training score = ', train_score
+        print 'Epoch =', epoch, 'training score = ', train_score
+
+    # Evaluate accuracy on test data
+    predicted_labels = get_predicted_labels(test_text_matrix, weight_matrix, senses)
+    test_score = eval(test_labels, predicted_labels)
+    return test_score
 
 
+def get_predicted_labels(text_matrix, weight_matrix, senses):
+    predicted_labels = []
+    product = text_matrix.dot(weight_matrix.transpose())
+    for i in range(len(product)):
+        predicted_label = senses[np.argmax(product[i])]
+        predicted_labels.append(predicted_label)
+    return predicted_labels
 
 """
 Trains a naive bayes model with bag of words features  + two additional features
@@ -298,7 +364,6 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
     raw_input("Press to continue")
     """
 
-
 def get_prob_text_given_sense(context_words, text, sense, prob_w_given_s):
     result = 1.0
     for word in text:
@@ -309,6 +374,39 @@ def get_prob_text_given_sense(context_words, text, sense, prob_w_given_s):
         result *= p
     return result
 
+"""
+Part 3.1
+"""
+def run_part3_weight_change(train_texts, train_targets,train_labels,
+                dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
+    # Part 3.1
+    senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
+    vocabulary = list(set([word for text in train_texts for word in text]))
+    # text vector
+    text0 = train_texts[0]
+    correct_label = train_labels[0]
+    text0_vec = [text0.count(word) for word in vocabulary] + [1]
+    text0_vec = np.array(text0_vec)
+    # Weights matrix, dimension = #sense * (#words + 1)
+    weight_matrix = np.zeros((len(senses), len(vocabulary)+1))
+    product = text0_vec.dot(weight_matrix.transpose())
+    predicted_label = senses[np.argmax(product)]
+
+    if predicted_label != correct_label:
+        print 'Wrong label: ', predicted_label
+        print 'Weight change for wrong label: '
+        weight_change = []
+        for i in range(len(vocabulary)):
+            if text0_vec[i] != 0:
+                weight_change.append((vocabulary[i], -text0_vec[i]))
+        print weight_change
+        print 'Correct label: ', correct_label
+        print 'Weight change for correct label: '
+        weight_change = []
+        for i in range(len(vocabulary)):
+            if text0_vec[i] != 0:
+                weight_change.append((vocabulary[i], text0_vec[i]))
+        print weight_change
 
 if __name__ == "__main__":
     # reading, tokenizing, and normalizing data
@@ -317,6 +415,7 @@ if __name__ == "__main__":
     test_labels, test_targets, test_texts = read_dataset('test')
 
     #running the classifier
+    """
     accuracy_baseline = run_baseline_classifier(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
@@ -329,3 +428,12 @@ if __name__ == "__main__":
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print '\nSolution to Part 2.4'
     print test_scores
+
+    run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
+        dev_labels, test_texts, test_targets, test_labels)
+    """
+
+    test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
+                    dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    print '\nSolution to Part 3.3'
+    print test_score
