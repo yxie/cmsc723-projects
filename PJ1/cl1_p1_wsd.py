@@ -139,7 +139,6 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
         predicted_labels.append(sense)
     return eval(test_labels, predicted_labels)
 
-
 """
 Trains a perceptron model with bag of words features and computes the accuracy on the test set
 
@@ -152,54 +151,30 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
     # Initialization
     senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
     vocabulary = list(set([word for text in train_texts for word in text]))
-
-    # Training text matrix, dimension = #train * (#words + 1)
-    # Randomize order of training texts & labels
-    rand_indices = range(len(train_texts))
-    random.shuffle(rand_indices)
-    train_text_matrix = []
-    train_labels_rand = train_labels
-    for i in range(len(train_texts)):
-        text = train_texts[rand_indices[i]]
-        label = train_labels[rand_indices[i]]
-        text_vec = [text.count(word) for word in vocabulary] + [1]
-        train_text_matrix.append(text_vec)
-        train_labels_rand[i] = label
-    train_text_matrix = np.array(train_text_matrix)
-    train_labels = train_labels_rand
-
-    """
-    train_text_matrix = []
-    for text in train_texts:
-        text_vec = [text.count(word) for word in vocabulary] + [1]
-        train_text_matrix.append(text_vec)
-    train_text_matrix = np.array(train_text_matrix)
-    """
-
-    # Dev text matrix
-    dev_text_matrix = []
-    for text in dev_texts:
-        text_vec = [text.count(word) for word in vocabulary] + [1]
-        dev_text_matrix.append(text_vec)
-    dev_text_matrix = np.array(dev_text_matrix)
-
-    # Test text matrix
-    test_text_matrix = []
-    for text in test_texts:
-        text_vec = [text.count(word) for word in vocabulary] + [1]
-        test_text_matrix.append(text_vec)
-    test_text_matrix = np.array(test_text_matrix)
-
+    # Vectorize texts using bag-of-words model
+    train_text_matrix = np.array(map(
+        lambda text: [text.count(word) for word in vocabulary] + [1],
+        train_texts
+        ))
+    dev_text_matrix = np.array(map(
+        lambda text: [text.count(word) for word in vocabulary] + [1],
+        dev_texts
+        ))
+    test_text_matrix = np.array(map(
+        lambda text: [text.count(word) for word in vocabulary] + [1],
+        test_texts
+        ))
     # Weight matrix, dimension = #sense * (vocabulary_size + 1)
     # Random initialization
-    weight_matrix = np.random.rand(len(senses), len(vocabulary) + 1)
+    # weight_matrix = np.random.rand(len(senses), len(vocabulary) + 1)
+    # Initialized to 0
+    weight_matrix = np.zeros((len(senses), len(vocabulary) + 1))
 
     # Training
     alpha = 1 # learning rate
-    t = 1
-    for iteration in range(1, 101):
+    iterations = 20
+    for iteration in range(1, iterations+1):
         # Update weights based on training data
-        m = np.zeros((len(senses), len(vocabulary) + 1))
         for i in range(len(train_labels)):
             text_vec = train_text_matrix[i]
             correct_label = train_labels[i]
@@ -210,34 +185,15 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
                 c_index = senses.index(correct_label)
                 weight_matrix[p_index] = weight_matrix[p_index] - alpha * text_vec
                 weight_matrix[c_index] = weight_matrix[c_index] + alpha * text_vec
-                m = m + weight_matrix
-            if (i + 1) % t == 0:
-                m = m / t
-                weight_matrix = m
-                m = np.zeros((len(senses), len(vocabulary) + 1))
         # Evaluate accuracy on training data
         predicted_labels = get_predicted_labels(train_text_matrix, weight_matrix, senses)
         train_score = eval(train_labels, predicted_labels)
         print 'Iteration =', iteration, 'training score = ', train_score
-        # After every 10 iterations, evaluate accuracy on test data
-        if iteration % 10 == 0:
-            predicted_labels = get_predicted_labels(test_text_matrix, weight_matrix, senses)
-            test_score = eval(test_labels, predicted_labels)
-            print 'Iteration =', iteration, 'test score = ', test_score
 
-    # Evaluate accuracy on test data
+    # Testing: evaluate accuracy on test data
     predicted_labels = get_predicted_labels(test_text_matrix, weight_matrix, senses)
     test_score = eval(test_labels, predicted_labels)
     return test_score
-
-
-def get_predicted_labels(text_matrix, weight_matrix, senses):
-    predicted_labels = []
-    product = text_matrix.dot(weight_matrix.transpose())
-    for i in range(len(product)):
-        predicted_label = senses[np.argmax(product[i])]
-        predicted_labels.append(predicted_label)
-    return predicted_labels
 
 """
 Trains a naive bayes model with bag of words features  + two additional features
@@ -418,6 +374,14 @@ def run_part3_weight_change(train_texts, train_targets,train_labels,
             if text0_vec[i] != 0:
                 weight_change.append((vocabulary[i], text0_vec[i]))
         print weight_change
+
+def get_predicted_labels(text_matrix, weight_matrix, senses):
+    predicted_labels = []
+    product = text_matrix.dot(weight_matrix.transpose())
+    for i in range(len(product)):
+        predicted_label = senses[np.argmax(product[i])]
+        predicted_labels.append(predicted_label)
+    return predicted_labels
 
 if __name__ == "__main__":
     # reading, tokenizing, and normalizing data
