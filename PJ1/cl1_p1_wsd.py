@@ -261,72 +261,74 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
     # Compute count(s, w): for sense s, how many times that context word w appears in the train_texts
     # Compute count(s, all_w) = sum_j' count(s, j'): for sense s, how many context words in total appearing in the train_texts
     senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
+    vocabulary = list(set([word for text in train_texts for word in text]))
     context_words = ['time', 'loss', 'export']
     count_s_w = dict()
     count_s_all_w = dict()
-    # Initialization
-    for sense in senses:
-        count_s_all_w[sense] = 0
-        for word in context_words:
-            count_s_w[(sense, word)] = 0
-        count_s_w[(sense, 'other')] = 0
+
     # Start counting
     for i in range(len(train_texts)):
         text = train_texts[i]
         sense = train_labels[i]
-        count_s_all_w[sense] += len(text)
-        count_other = len(text)
-        for word in context_words:
+        count_s_all_w[sense] = count_s_all_w.get(sense, 0) + len(text)
+        for word in vocabulary:
             val = text.count(word)
-            count_other -= val
-            count_s_w[(sense, word)] += val
-        count_s_w[(sense, 'other')] += count_other
-
+            count_s_w[(sense, word)] = count_s_w.get((sense, word), 0) + val
     # Compute count(s): the number of texts that have sense s
     count_s = dict()
     for sense in senses:
         count_s[sense] = train_labels.count(sense)
     # Solution to Part 2.1
     print "\nSolution to Part 2.1"
-    pp.pprint(count_s_w)
-    pp.pprint(count_s)
-    pp.pprint(count_s_all_w)
+    print "c(s):"
+    for sense in senses:
+        print sense, count_s[sense]
+    print "c(s, w):"
+    for sense in senses:
+        for word in context_words:
+            print sense, word, count_s_w[(sense, word)]
 
     # Compute p(s): probability that a text will have sense s
     # Compute p(w|s): probability that context word j will appear in a text that has sense y for 'line'
     prob_s = dict()
     prob_w_given_s = dict()
+    alpha = 1 # smoothing constant
     for sense in senses:
         prob_s[sense] = float(count_s[sense]) / len(train_labels)
-        for word in context_words:
-            prob_w_given_s[(sense, word)] = float(count_s_w[(sense, word)]) / count_s_all_w[sense]
-        prob_w_given_s[(sense, 'other')] = float(count_s_w[(sense, 'other')]) / count_s_all_w[sense]
+        for word in vocabulary:
+            prob_w_given_s[(sense, word)] = (
+                float(count_s_w[(sense, word)] + alpha)
+                / (count_s_all_w[sense] + alpha * len(vocabulary))
+                )
     # Solution to Part 2.2
     print "\nSolution to Part 2.2"
-    pp.pprint(prob_s)
-    pp.pprint(prob_w_given_s)
+    print "p(s):"
+    for sense in senses:
+        print sense, prob_s[sense]
+    print "p(w|s):"
+    for sense in senses:
+        for word in context_words:
+            print sense, word, prob_w_given_s[(sense, word)]
 
     # Verify total probability sums to 1
     """
     prob_sum = 0.0
     for sense in senses:
-        for word in context_words:
+        for word in vocabulary:
             prob_sum += prob_w_given_s[(sense, word)] * prob_s[sense]
-        prob_sum += prob_w_given_s[(sense, 'other')] * prob_s[sense]
-    print prob_sum
+    print "prob_sum = ", prob_sum
     raw_input("Press to continue")
     """
 
     # Test first sample of dev set
     sample_text = dev_texts[0]
     sample_label = dev_labels[0]
-    sample_text_vec = [sample_text.count(w) for w in context_words]
     prob_x_given_s = dict()
     prob_x = 0
     for sense in senses:
         prob_x_given_s[sense] = get_prob_text_given_sense(
-            context_words,
-            sample_text_vec,
+            vocabulary,
+            sample_text,
             sense,
             prob_w_given_s
             )
@@ -343,18 +345,16 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
     prob_sum = 0
     for sense in senses:
         prob_sum += prob_s_given_x[sense]
-    print prob_sum
+    print "prob_sum = ", prob_sum
     raw_input("Press to continue")
     """
 
-def get_prob_text_given_sense(context_words, text, sense, prob_w_given_s):
+def get_prob_text_given_sense(vocabulary, text, sense, prob_w_given_s):
     result = 1.0
     for word in text:
-        if word in context_words:
+        if word in vocabulary:
             p = prob_w_given_s[(sense, word)]
-        else:
-            p = prob_w_given_s[(sense, 'other')]
-        result *= p
+            result *= p
     return result
 
 """
@@ -412,7 +412,7 @@ if __name__ == "__main__":
 
     print('Test accuracy for baseline classifier', accuracy_baseline)
 
-    test_scores = run_part2_context_words(train_texts, train_targets, train_labels,
+    run_part2_context_words(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
     test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
@@ -428,13 +428,5 @@ if __name__ == "__main__":
     print '\nSolution to Part 3.3'
     print test_score
     """
-
-    test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
-                dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    print '\nSolution to Part 2.4'
-    print test_scores
-
-    test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
-                    dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    print '\nSolution to Part 3.3'
-    print test_score
+    run_part2_context_words(train_texts, train_targets, train_labels,
+                dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
