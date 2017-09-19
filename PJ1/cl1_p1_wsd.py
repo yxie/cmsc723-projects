@@ -44,6 +44,30 @@ def read_dataset(subset):
     else:
         print '>>>> invalid input !!! <<<<<'
 
+
+def read_dataset_mod(subset):
+	labels = []
+	texts = []
+	targets = []
+	if subset in ['train', 'dev', 'test']:
+		with open('data/wsd_'+subset+'.txt') as inp_hndl:
+			for example in inp_hndl:
+				label, text = example.strip().split('\t')
+				tokenizer = nltk.tokenize.RegexpTokenizer(r'\w{2,}')
+				text = tokenizer.tokenize(text.lower())
+				if 'line' in text:
+					ambig_ix = text.index('line')
+				elif 'lines' in text:
+					ambig_ix = text.index('lines')
+				else:
+					ldjal
+				targets.append(ambig_ix)
+				labels.append(label)
+				texts.append(text)
+		return (labels, targets, texts)
+	else:
+		print '>>>> invalid input !!! <<<<<'
+
 """
 computes f1-score of the classification accuracy
 
@@ -399,14 +423,22 @@ def get_predicted_labels(text_matrix, weight_matrix, senses):
         predicted_labels.append(predicted_label)
     return predicted_labels
 
+def write_to_file(dev_texts, filename):
+    random.shuffle(dev_texts)
+    with open(filename, 'w') as outh:
+		for d in dev_texts:
+			outh.write(' '.join(d) + '\n')
+
 if __name__ == "__main__":
     # reading, tokenizing, and normalizing data
     train_labels, train_targets, train_texts = read_dataset('train')
     dev_labels, dev_targets, dev_texts = read_dataset('dev')
     test_labels, test_targets, test_texts = read_dataset('test')
 
+    # write_to_file(dev_texts, 'dev_text_shuffle.txt')
+
     #running the classifier
-    """
+
     accuracy_baseline = run_baseline_classifier(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
 
@@ -427,6 +459,3 @@ if __name__ == "__main__":
                     dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print '\nSolution to Part 3.3'
     print test_score
-    """
-    run_part2_context_words(train_texts, train_targets, train_labels,
-                dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)

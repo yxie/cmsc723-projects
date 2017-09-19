@@ -1,15 +1,15 @@
-Team: 
-1- 
-2- 
-3-
+Team: Project Group 5
+1- Yang Xie
+2- Haoying Dai
+3- Da He
 
 Email: 
 
 ---------------------------------------------------------------------------------
 Part 1)
 
-1- baseline accuracy = ?%
-2- Cohen’s Kappa = ?
+1- baseline accuracy = 55.5%
+2- Cohen’s Kappa = 1
 
 ---------------------------------------------------------------------------------
 Part 2)
@@ -17,54 +17,54 @@ Part 2)
 
 s   | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-c(s)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+c(s)|  273 |    253     |    251    |  312  |  15256  |  287
 
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-c(s,time)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+c(s,time)|   12  |    13     |    16     |  15   |    43   |  19
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-c(s,loss)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+c(s,loss)|   1  |    0       |    0      |  2    |    23    |  0
 
 
 s          | cord | division   | formation | phone | product | text
 ---------------------------------------------------------------------
-c(s,export)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+c(s,export)|   0  |    0       |    0      |  1    |    3    |  0
 
 
 
-2-
+2- (the following values in percentage %)
 
 s   | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s)|  9.4 |    8.7     |   8.6     |  10.7 |   52.6  |  9.9
 
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s|time)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s|time)| 0.047 | 0.048     |   0.059   | 0.052 | 0.046   | 0.064
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s|loss)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s|loss)|7.2e-3|  3.4e-3    |   3.5e-3  | 9.7e-3| 0.025   | 3.2e-3
 
 
 s          | cord | division   | formation | phone | product | text
 ---------------------------------------------------------------------
-p(s|export)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s|export)|3.6e-3|  3.4e-3    |   3.5e-3  | 6.5e-3| 4.2e-3  | 3.2e-3
 
 
 3- for the sentence X = "and i can tell you that i 'm an absolute nervous wreck every time she performs . i have her practice the last two lines on each page , so I can learn exactly when to turn the page -- just one of the tricks to this trade that i 've learned the hard way ."
 
 s     | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s|X)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s|X)|   0  |    0       |    0      |  0    |    1    |    0
 
 4- classifier f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged = 0.849
+macro averaged = 0.761
 
 5- 
 
