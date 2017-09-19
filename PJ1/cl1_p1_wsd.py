@@ -117,10 +117,15 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
     # Testing
     # Vectorize text using bag-of-words model and create a matrix
     # Dimension = #test * (#context_words + 1)
-    test_text_matrix = []
-    for text in test_texts:
-        text_vec = [text.count(word) for word in context_words] + [1]
-        test_text_matrix.append(text_vec)
+    # test_text_matrix = []
+    # for text in test_texts:
+    #     text_vec = [text.count(word) for word in context_words] + [1]
+    #     test_text_matrix.append(text_vec)
+
+    test_text_matrix = np.array(map(
+        lambda text: [text.count(word) for word in context_words] + [1],
+        test_texts
+        ))
 
     weight_matrix = np.array(weight_matrix)
     test_text_matrix = np.array(test_text_matrix)
@@ -349,10 +354,12 @@ def run_part3_weight_change(train_texts, train_targets,train_labels,
     # text vector
     text0 = train_texts[0]
     correct_label = train_labels[0]
+    # text0_vec, dimension = 1 * (#words + 1)
     text0_vec = [text0.count(word) for word in vocabulary] + [1]
     text0_vec = np.array(text0_vec)
     # Weights matrix, dimension = #sense * (#words + 1)
     weight_matrix = np.zeros((len(senses), len(vocabulary)+1))
+    # product, dimension = 1 * (#sense)
     product = text0_vec.dot(weight_matrix.transpose())
     predicted_label = senses[np.argmax(product)]
 
@@ -447,7 +454,7 @@ if __name__ == "__main__":
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print '\nSolution to Part 2.4'
     print test_scores
-    #
+
     # run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
     #     dev_labels, test_texts, test_targets, test_labels)
     #
