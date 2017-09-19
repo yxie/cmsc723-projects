@@ -45,29 +45,6 @@ def read_dataset(subset):
         print '>>>> invalid input !!! <<<<<'
 
 
-def read_dataset_mod(subset):
-	labels = []
-	texts = []
-	targets = []
-	if subset in ['train', 'dev', 'test']:
-		with open('data/wsd_'+subset+'.txt') as inp_hndl:
-			for example in inp_hndl:
-				label, text = example.strip().split('\t')
-				tokenizer = nltk.tokenize.RegexpTokenizer(r'\w{2,}')
-				text = tokenizer.tokenize(text.lower())
-				if 'line' in text:
-					ambig_ix = text.index('line')
-				elif 'lines' in text:
-					ambig_ix = text.index('lines')
-				else:
-					ldjal
-				targets.append(ambig_ix)
-				labels.append(label)
-				texts.append(text)
-		return (labels, targets, texts)
-	else:
-		print '>>>> invalid input !!! <<<<<'
-
 """
 computes f1-score of the classification accuracy
 
@@ -121,40 +98,20 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
     window_size = 5
     context_words = create_vocabulary(train_texts, train_targets, window_size)
 
-    count_s_w = dict()
-    count_s_all_w = dict()
-    # Initialization
+    texts = split_text()
+    num_vocab = len(context_words)
+    num_doc = len(train_labels)
+    alpha = 1
+    weight_matrix = []
+    # Dimention = #sense * (#context_words + 1)
     for sense in senses:
-        count_s_all_w[sense] = 0
-        for word in context_words:
-            count_s_w[(sense, word)] = 0
-    # Start counting
-    for i in range(len(train_texts)):
-        text = train_texts[i]
-        sense = train_labels[i]
-        count_s_all_w[sense] += len(text)
-        for word in context_words:
-            val = text.count(word)
-            count_s_w[(sense, word)] += val
-    # Compute count(s): the number of texts that have sense s
-    count_s = dict()
-    for sense in senses:
-        count_s[sense] = train_labels.count(sense)
-
-    # Compute p(s): probability that a text will have sense s
-    # Compute p(w|s): probability that context word j will appear in a text that has sense y for 'line'
-    # prob_s = dict()
-    # prob_w_given_s = dict()
-    weight_matrix = [] # Dimention = #sense * (#context_words + 1)
-    alpha = 0.1 # smoothing constant
-    for sense in senses:
+        count_s_all_w = len(texts[sense])
         weight = []
         for word in context_words:
-            prob_w_given_s = float(count_s_w[(sense, word)] + alpha) / (count_s_all_w[sense] + alpha * len(context_words))
+            prob_w_given_s = float(texts[sense].count(word) + alpha) / (count_s_all_w + alpha * num_vocab)
             weight.append(math.log(prob_w_given_s))
-        prob_s = float(count_s[sense]) / len(train_labels)
-        bias = math.log(prob_s)
-        weight.append(bias)
+        prob_s = float(train_labels.count(sense)) / num_doc
+        weight.append(math.log(prob_s))
         weight_matrix.append(weight)
 
     # Testing
@@ -423,11 +380,49 @@ def get_predicted_labels(text_matrix, weight_matrix, senses):
         predicted_labels.append(predicted_label)
     return predicted_labels
 
+
+# my code. mostly useless. ----------------------------------------------------------------
+# create a file for human annotation.
 def write_to_file(dev_texts, filename):
     random.shuffle(dev_texts)
     with open(filename, 'w') as outh:
 		for d in dev_texts:
 			outh.write(' '.join(d) + '\n')
+
+# concatinate training text according to their label.
+# prob(w|s) can be done by calling text[sense].count(w) / len(text[sense]
+def split_text():
+    texts = dict()
+    with open('data/wsd_train.txt') as inp_hndl:
+        for example in inp_hndl:
+            label, text = example.strip().split('\t')
+            text = nltk.word_tokenize(text.lower().replace('" ', '"'))
+            texts[label] = texts.get(label, []) + text
+    return texts
+
+# discard pounctuation
+def read_dataset_mod(subset):
+	labels = []
+	texts = []
+	targets = []
+	if subset in ['train', 'dev', 'test']:
+		with open('data/wsd_'+subset+'.txt') as inp_hndl:
+			for example in inp_hndl:
+				label, text = example.strip().split('\t')
+				tokenizer = nltk.tokenize.RegexpTokenizer(r'\w{2,}')
+				text = tokenizer.tokenize(text.lower())
+				if 'line' in text:
+					ambig_ix = text.index('line')
+				elif 'lines' in text:
+					ambig_ix = text.index('lines')
+				else:
+					ldjal
+				targets.append(ambig_ix)
+				labels.append(label)
+				texts.append(text)
+		return (labels, targets, texts)
+	else:
+		print '>>>> invalid input !!! <<<<<'
 
 if __name__ == "__main__":
     # reading, tokenizing, and normalizing data
@@ -435,27 +430,28 @@ if __name__ == "__main__":
     dev_labels, dev_targets, dev_texts = read_dataset('dev')
     test_labels, test_targets, test_texts = read_dataset('test')
 
-    # write_to_file(dev_texts, 'dev_text_shuffle.txt')
 
-    #running the classifier
-
-    accuracy_baseline = run_baseline_classifier(train_texts, train_targets, train_labels,
-                dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
-
-    print('Test accuracy for baseline classifier', accuracy_baseline)
-
-    run_part2_context_words(train_texts, train_targets, train_labels,
-                dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
-
+    # # write_to_file(dev_texts, 'dev_text_shuffle.txt')
+    #
+    # #running the classifier
+    #
+    # accuracy_baseline = run_baseline_classifier(train_texts, train_targets, train_labels,
+    #             dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+    #
+    # print('Test accuracy for baseline classifier', accuracy_baseline)
+    #
+    # run_part2_context_words(train_texts, train_targets, train_labels,
+    #             dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+    #
     test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print '\nSolution to Part 2.4'
     print test_scores
-
-    run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
-        dev_labels, test_texts, test_targets, test_labels)
-
-    test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
-                    dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    print '\nSolution to Part 3.3'
-    print test_score
+    #
+    # run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
+    #     dev_labels, test_texts, test_targets, test_labels)
+    #
+    # test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
+    #                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    # print '\nSolution to Part 3.3'
+    # print test_score
