@@ -98,7 +98,7 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
     window_size = 5
     context_words = create_vocabulary(train_texts, train_targets, window_size)
 
-    texts = split_text()
+    texts = split_text(train_texts, train_labels)
     num_vocab = len(context_words)
     num_doc = len(train_labels)
     alpha = 1
@@ -153,6 +153,14 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
     window_size = 5
     vocabulary = create_vocabulary(train_texts, train_targets, window_size)
 
+    c = zip(train_texts, train_labels, train_targets)
+    random.shuffle(c)
+
+    train_texts = [e[0] for e in c]
+    train_labels = [e[1] for e in c]
+    train_targets = [e[2] for e in c]
+
+
     # Vectorize texts using bag-of-words model
     train_text_matrix = np.array(map(
         lambda text: [text.count(word) for word in vocabulary] + [1],
@@ -171,10 +179,10 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
     # weight_matrix = np.random.rand(len(senses), len(vocabulary) + 1)
     # Initialized to 0
     weight_matrix = np.zeros((len(senses), len(vocabulary) + 1))
-
+    m = np.zeros((len(senses), len(vocabulary) + 1))
     # Training
     alpha = 1 # learning rate
-    iterations = 20
+    iterations = 5
     for iteration in range(1, iterations+1):
         # Update weights based on training data
         for i in range(len(train_labels)):
@@ -187,13 +195,15 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
                 c_index = senses.index(correct_label)
                 weight_matrix[p_index] = weight_matrix[p_index] - alpha * text_vec
                 weight_matrix[c_index] = weight_matrix[c_index] + alpha * text_vec
+                m = m + weight_matrix
         # Evaluate accuracy on training data
         predicted_labels = get_predicted_labels(train_text_matrix, weight_matrix, senses)
         train_score = eval(train_labels, predicted_labels)
+        # print train_score[0], ', '
         print 'Iteration =', iteration, 'training score = ', train_score
-
+    m = m/iterations
     # Testing: evaluate accuracy on test data
-    predicted_labels = get_predicted_labels(test_text_matrix, weight_matrix, senses)
+    predicted_labels = get_predicted_labels(test_text_matrix, m, senses)
     test_score = eval(test_labels, predicted_labels)
     return test_score
 
@@ -207,10 +217,71 @@ The same thing applies to the reset of the parameters.
 """
 def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
-    """
-    **Your final implementation of Part 4 with perceptron classifier**
-    """
-    pass
+
+    senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
+    # context_words = list(set([word for text in train_texts for word in text]))
+    window_size = 5
+    context_words = create_vocabulary(train_texts, train_targets, window_size)
+    texts = split_text(train_texts, train_labels)
+    num_vocab = len(context_words)
+    num_doc = len(train_labels)
+    pos_train, pos_vocab = pos_feature(train_texts, train_targets)
+    pos_splited = split_pos(pos_train, train_labels)
+    # for sense in senses:
+    #     while 'NN' in pos_splited[sense]: pos_splited[sense].remove('NN')
+    #     while 'NNS' in pos_splited[sense]: pos_splited[sense].remove('NNS')
+
+    num_pos_vocab = len(pos_vocab)
+    alpha = 1
+    weight_matrix = []
+    # Dimention = #sense * (#context_words + 1)
+    for sense in senses:
+        count_s_all_w = len(texts[sense])
+        count_s_all_pos = len(pos_splited[sense])
+        weight = []
+        norm = (count_s_all_w + count_s_all_pos + alpha * (num_vocab + num_pos_vocab))
+        for word in context_words:
+            prob_w_given_s = float(texts[sense].count(word) + alpha) / norm
+            weight.append(math.log(prob_w_given_s))
+        for pos in pos_vocab:
+            prob_pos_given_s = float(pos_splited[sense].count(pos) + alpha) / norm
+            weight.append(math.log(prob_pos_given_s))
+        prob_s = float(train_labels.count(sense)) / num_doc
+        weight.append(math.log(prob_s))
+        weight_matrix.append(weight)
+
+    # Testing
+    # Vectorize text using bag-of-words model and create a matrix
+    # Dimension = #test * (#context_words + 1)
+    # test_text_matrix = []
+    # for text in test_texts:
+    #     text_vec = [text.count(word) for word in context_words] + [1]
+    #     test_text_matrix.append(text_vec)
+
+    test_text_matrix = np.array(map(
+        lambda text: [text.count(word) for word in context_words],
+        test_texts
+    ))
+
+    pos_tests, _= pos_feature(test_texts, test_targets)
+    test_pos_matrix = np.array(map(
+        lambda pos_test: [pos_test.count(pos) for pos in pos_vocab] + [1],
+        pos_tests
+    ))
+
+    weight_matrix = np.array(weight_matrix)
+    # print test_text_matrix.shape, test_pos_matrix.shape, len(pos_vocab)
+
+    test_matrix = np.concatenate((test_text_matrix, test_pos_matrix), axis=1)
+    # Dimention = #test * #sense
+    product = test_matrix.dot(weight_matrix.transpose())
+    predicted_labels = []
+    for i in range(len(product)):
+        index = np.argmax(product[i])
+        sense = senses[index]
+        predicted_labels.append(sense)
+    return eval(test_labels, predicted_labels)
+
 
 """
 Trains a perceptron model with bag of words features  + two additional features
@@ -222,10 +293,69 @@ The same thing applies to the reset of the parameters.
 """
 def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
-    """
-    **Your final implementation of Part 4 with perceptron classifier**
-    """
-    pass
+    # Initialization
+    senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
+    # vocabulary = list(set([word for text in train_texts for word in text]))
+    window_size = 5
+    vocabulary = create_vocabulary(train_texts, train_targets, window_size)
+
+    # Vectorize texts using bag-of-words model
+    train_text_matrix = np.array(map(
+        lambda text: [text.count(word) for word in vocabulary],
+        train_texts
+    ))
+
+    pos_train, pos_vocab = pos_feature(train_texts, train_targets)
+    train_pos_matrix = np.array(map(
+        lambda pos_train_entry: [pos_train_entry.count(pos) for pos in pos_vocab] + [1],
+        pos_train
+    ))
+    train_matrix = np.concatenate((train_text_matrix, train_pos_matrix), axis=1)
+
+    test_text_matrix = np.array(map(
+        lambda text: [text.count(word) for word in vocabulary],
+        test_texts
+    ))
+    pos_tests, _ = pos_feature(test_texts, test_targets)
+    test_pos_matrix = np.array(map(
+        lambda pos_test: [pos_test.count(pos) for pos in pos_vocab] + [1],
+        pos_tests
+    ))
+    test_matrix = np.concatenate((test_text_matrix, test_pos_matrix), axis=1)
+
+    # Weight matrix, dimension = #sense * (vocabulary_size + 1)
+    # Random initialization
+    # weight_matrix = np.random.rand(len(senses), len(vocabulary) + 1)
+    # Initialized to 0
+    weight_matrix = np.zeros((len(senses), len(vocabulary) + len(pos_vocab) + 1))
+    m = np.zeros((len(senses), len(vocabulary) + len(pos_vocab) + 1))
+    # Training
+    alpha = 1  # learning rate
+    iterations = 20
+    for iteration in range(1, iterations + 1):
+        # Update weights based on training data
+        for i in range(len(train_labels)):
+            text_vec = train_matrix[i]
+            correct_label = train_labels[i]
+            product = text_vec.dot(weight_matrix.transpose())
+            predicted_label = senses[np.argmax(product)]
+            if predicted_label != correct_label:
+                p_index = senses.index(predicted_label)
+                c_index = senses.index(correct_label)
+                weight_matrix[p_index] = weight_matrix[p_index] - alpha * text_vec
+                weight_matrix[c_index] = weight_matrix[c_index] + alpha * text_vec
+                m = m + weight_matrix
+        # Evaluate accuracy on training data
+        predicted_labels = get_predicted_labels(train_matrix, weight_matrix, senses)
+        train_score = eval(train_labels, predicted_labels)
+        # print train_score[0], ', '
+        print 'Iteration =', iteration, 'training score = ', train_score
+    m = m / iterations
+    # Testing: evaluate accuracy on test data
+    predicted_labels = get_predicted_labels(test_matrix, m, senses)
+    test_score = eval(test_labels, predicted_labels)
+    return test_score
+
 
 """
 Part 1.1
@@ -396,15 +526,23 @@ def write_to_file(dev_texts, filename):
 		for d in dev_texts:
 			outh.write(' '.join(d) + '\n')
 
+# def write_to_file(data, file_name):
+#     with open(file_name, 'w') as outh:
+#         for p in data:
+#             outh.write(p + '\n')
+
 # concatinate training text according to their label.
 # prob(w|s) can be done by calling text[sense].count(w) / len(text[sense]
-def split_text():
+def split_text(text,label):
     texts = dict()
-    with open('data/wsd_train.txt') as inp_hndl:
-        for example in inp_hndl:
-            label, text = example.strip().split('\t')
-            text = nltk.word_tokenize(text.lower().replace('" ', '"'))
-            texts[label] = texts.get(label, []) + text
+    for i in range(len(text)):
+        texts[label[i]] = texts.get(label[i], []) + text[i]
+
+    # with open('data/wsd_train.txt') as inp_hndl:
+    #     for example in inp_hndl:
+    #         label, text = example.strip().split('\t')
+    #         text = nltk.word_tokenize(text.lower().replace('" ', '"'))
+    #         texts[label] = texts.get(label, []) + text
     return texts
 
 # discard pounctuation
@@ -431,11 +569,44 @@ def read_dataset_mod(subset):
 	else:
 		print '>>>> invalid input !!! <<<<<'
 
+def pos_feature(texts, targets):
+    pos_l_l_t = [nltk.pos_tag(texts[i][targets[i]-2:targets[i]+3]) for i in range(len(texts))]
+    pos = [[pos_t[1] for pos_t in pos_l_t] for pos_l_t in pos_l_l_t]
+    pos_vocab = list(set.union(*map(set,pos)))
+    return pos, pos_vocab
+
+def pos_feature_all(texts):
+    pos_l_l_t = [nltk.pos_tag(texts[i]) for i in range(len(texts))]
+    pos = [[pos_t[1] for pos_t in pos_l_t] for pos_l_t in pos_l_l_t]
+    pos_vocab = list(set.union(*map(set, pos)))
+    return pos, pos_vocab
+
+    # return [nltk.pos_tag(word) for text in train_texts for word in text]
+def split_pos(pos, label):
+    pos_splited = dict()
+    for i in range(len(pos)):
+        pos_splited[label[i]]=pos_splited.get(label[i],[])+pos[i]
+    return pos_splited
+
+
 if __name__ == "__main__":
     # reading, tokenizing, and normalizing data
     train_labels, train_targets, train_texts = read_dataset('train')
     dev_labels, dev_targets, dev_texts = read_dataset('dev')
     test_labels, test_targets, test_texts = read_dataset('test')
+
+
+    # test_score = run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labels,
+    #                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    # print test_score
+
+    test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
+                dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    print '\nSolution to Part 2.4'
+    print test_scores
+
+    # pos, pos_vocab = pos_feature(train_texts, train_targets)
+    # splited = split_pos(pos, train_labels)
 
 
     # # write_to_file(dev_texts, 'dev_text_shuffle.txt')
@@ -450,15 +621,15 @@ if __name__ == "__main__":
     # run_part2_context_words(train_texts, train_targets, train_labels,
     #             dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
     #
-    test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
-                dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    print '\nSolution to Part 2.4'
-    print test_scores
+    # test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
+    #             dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    # print '\nSolution to Part 2.4'
+    # print test_scores
 
     # run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
     #     dev_labels, test_texts, test_targets, test_labels)
     #
-    # test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
-    #                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    # print '\nSolution to Part 3.3'
-    # print test_score
+    test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
+                    dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    print '\nSolution to Part 3.3'
+    print test_score

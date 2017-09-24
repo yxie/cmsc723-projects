@@ -5,13 +5,11 @@ Team: Project Group 5
 
 Email: 
 
-
-todo 2.5 3 4
 ---------------------------------------------------------------------------------
 Part 1)
 
 1- baseline accuracy = 55.5%
-2- Cohen’s Kappa = 1
+2- Cohen’s Kappa = 1 (completely agreed with gold annotations)
 
 ---------------------------------------------------------------------------------
 Part 2)
@@ -69,32 +67,74 @@ micro averaged = 0.849
 macro averaged = 0.761
 
 5- 
-
+smoothing: we used add 1 smoothing as suggested in the lecture.
+log-probabilities: use log to improve numerical stability.
 ---------------------------------------------------------------------------------
 Part 3)
 
-1- 
-2- comma separated accuracies (e.g. 30,35,60): 
+1-
+Wrong label:  cord
+Weight change for wrong label:
+[('.', -1), ('``', -1), ('her', -2), ('with', -1), ('plucky', -1), ('an', -1), ('to', -2), ('plank', -1), ('jean-jacques', -1), ('last', -1), ('by', -1), ('line', -1), ('tied', -1), ('painting', -1), ('sits', -1), ('drawing', -1), ('another', -1), ('the', -2), ('much-quoted', -1), ('not', -1), ('shows', -1), ('friend', -1), ('lady', -1), ('a', -1), ('madame', -1), ('room', -1), ('before', -1), (',', -3), ('dog', -1), ('in', -1), ('down', -1), ('managed', -1), ('did', -1), ('french', -1), ('little', -1), ('rolland', -1), ('!', -1), ('exquisite', -1), ('harp', -1), ('pet', -1), ('ah', -1), ('liberty', -1), ('she', -1), ('and', -1), ('of', -1), ('hauer', -1), ('lafayette', -1), ('who', -1), ('wordsworth', -1)]
+Correct label:  text
+Weight change for correct label:
+[('.', 1), ('``', 1), ('her', 2), ('with', 1), ('plucky', 1), ('an', 1), ('to', 2), ('plank', 1), ('jean-jacques', 1), ('last', 1), ('by', 1), ('line', 1), ('tied', 1), ('painting', 1), ('sits', 1), ('drawing', 1), ('another', 1), ('the', 2), ('much-quoted', 1), ('not', 1), ('shows', 1), ('friend', 1), ('lady', 1), ('a', 1), ('madame', 1), ('room', 1), ('before', 1), (',', 3), ('dog', 1), ('in', 1), ('down', 1), ('managed', 1), ('did', 1), ('french', 1), ('little', 1), ('rolland', 1), ('!', 1), ('exquisite', 1), ('harp', 1), ('pet', 1), ('ah', 1), ('liberty', 1), ('she', 1), ('and', 1), ('of', 1), ('hauer', 1), ('lafayette', 1), ('who', 1), ('wordsworth', 1)]
+
+2-
+Iteration = 1 training score =  (0.82184700206753958, 0.73783868653074414)
+Iteration = 2 training score =  (0.78807718814610628, 0.72074472746672713)
+Iteration = 3 training score =  (0.89145416953824952, 0.83394930406602541)
+Iteration = 4 training score =  (0.90833907649896628, 0.85535023757229123)
+Iteration = 5 training score =  (0.88835286009648518, 0.84990615595969643)
+Iteration = 6 training score =  (0.91281874569262578, 0.89636211777738628)
+Iteration = 7 training score =  (0.92798070296347346, 0.87932802549840261)
+Iteration = 8 training score =  (0.9645072363886974, 0.94432654380301884)
+Iteration = 9 training score =  (0.97139903514817372, 0.95846429719230608)
+Iteration = 10 training score =  (0.98483804272915232, 0.97654726505768641)
+Iteration = 11 training score =  (0.95520330806340459, 0.92147647232595864)
+Iteration = 12 training score =  (0.95761543762922119, 0.92760770491338584)
+Iteration = 13 training score =  (0.95761543762922119, 0.9535640861309731)
+Iteration = 14 training score =  (0.99483115093039287, 0.99319189784938156)
+Iteration = 15 training score =  (0.95830461750516882, 0.9478029328816634)
+Iteration = 16 training score =  (0.97036526533425227, 0.95023279296426055)
+Iteration = 17 training score =  (0.87491385251550657, 0.88185574974878544)
+Iteration = 18 training score =  (0.98208132322536179, 0.97412867506513645)
+Iteration = 19 training score =  (0.98208132322536179, 0.96921240425770117)
+Iteration = 20 training score =  (0.99931082012405237, 0.99926731874507901)
+
+
 3- classifier f-measures on the test set:
-micro averaged = 
-macro averaged = 
-4- 
+micro averaged = 0.828
+macro averaged = 0.735
+4-
+random shuffling: since this is a online update, random shuffling would help generalize.
+learning rate: from the lecture slides, we set the learning rate to 1. but we also tried
+other learning rates with no significant improvement.
+number of iterations: we used 5 iteration. After 5 iteration, the f score start to decline
+weight averaging: weight averaging should help generalized. But we don't see significant improvement
 ---------------------------------------------------------------------------------
 Part 4)
 A) Feature A:
 
-1- Description
+1- My new feature is part of speech which use nltk.pos_tag() function to
+find all POS in a window centered at the target.
 
 2- naive-bayes f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged = 0.8523
+macro averaged = 0.7737
 
 3- perceptron f-measures on the test set:
-micro averaged = 
-macro averaged = 
-
+micro averaged = 0.8170
+macro averaged = 0.7102
 
 4- Conclusions:
+Above scores are obtained from concatinating my new feature with the traditional
+bag of words feature. The f score does not have significant changes comparing to
+using traditional feature along. I also used my new feature along. The f score
+obtained is similar to the baseline frequency count (around 57%). My new feature
+vocabulary size is only around 40 which may not be enough to separate data. Also
+POS is better used with relative location information. I think the result from using
+new feature alone is complete noise, and the 56% score is mainly due to the prior p(s).
 
 B) Feature B:
 
