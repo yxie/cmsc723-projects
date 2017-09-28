@@ -179,10 +179,12 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
     # weight_matrix = np.random.rand(len(senses), len(vocabulary) + 1)
     # Initialized to 0
     weight_matrix = np.zeros((len(senses), len(vocabulary) + 1))
-    m = np.zeros((len(senses), len(vocabulary) + 1))
+
     # Training
     alpha = 1 # learning rate
     iterations = 20
+    m = weight_matrix
+    m_count = 0
     for iteration in range(1, iterations+1):
         # Update weights based on training data
         for i in range(len(train_labels)):
@@ -196,14 +198,15 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
                 weight_matrix[p_index] = weight_matrix[p_index] - alpha * text_vec
                 weight_matrix[c_index] = weight_matrix[c_index] + alpha * text_vec
                 m = m + weight_matrix
+                m_count += 1
         # Evaluate accuracy on training data
         predicted_labels = get_predicted_labels(train_text_matrix, weight_matrix, senses)
         train_score = eval(train_labels, predicted_labels)
-        # print train_score[0], ', '
-        print 'Iteration =', iteration, 'training score = ', train_score
-    m = m/iterations
+        print 'Iteration =', iteration, 'training score (micro, macro) = ', train_score
+
     # Testing: evaluate accuracy on test data
-    predicted_labels = get_predicted_labels(test_text_matrix, m, senses)
+    weight_matrix = m / m_count
+    predicted_labels = get_predicted_labels(test_text_matrix, weight_matrix, senses)
     test_score = eval(test_labels, predicted_labels)
     return test_score
 
@@ -631,3 +634,8 @@ if __name__ == "__main__":
     print '\nSolution to Part 3.3'
     print test_score
     """
+
+    test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
+                    dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    print '\nSolution to Part 3.3'
+    print test_score

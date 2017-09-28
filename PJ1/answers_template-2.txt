@@ -81,36 +81,36 @@ Weight change for correct label:
 [('.', 1), ('``', 1), ('her', 2), ('with', 1), ('plucky', 1), ('an', 1), ('to', 2), ('plank', 1), ('jean-jacques', 1), ('last', 1), ('by', 1), ('line', 1), ('tied', 1), ('painting', 1), ('sits', 1), ('drawing', 1), ('another', 1), ('the', 2), ('much-quoted', 1), ('not', 1), ('shows', 1), ('friend', 1), ('lady', 1), ('a', 1), ('madame', 1), ('room', 1), ('before', 1), (',', 3), ('dog', 1), ('in', 1), ('down', 1), ('managed', 1), ('did', 1), ('french', 1), ('little', 1), ('rolland', 1), ('!', 1), ('exquisite', 1), ('harp', 1), ('pet', 1), ('ah', 1), ('liberty', 1), ('she', 1), ('and', 1), ('of', 1), ('hauer', 1), ('lafayette', 1), ('who', 1), ('wordsworth', 1)]
 
 2-
-Iteration = 1 training score =  (0.82184700206753958, 0.73783868653074414)
-Iteration = 2 training score =  (0.78807718814610628, 0.72074472746672713)
-Iteration = 3 training score =  (0.89145416953824952, 0.83394930406602541)
-Iteration = 4 training score =  (0.90833907649896628, 0.85535023757229123)
-Iteration = 5 training score =  (0.88835286009648518, 0.84990615595969643)
-Iteration = 6 training score =  (0.91281874569262578, 0.89636211777738628)
-Iteration = 7 training score =  (0.92798070296347346, 0.87932802549840261)
-Iteration = 8 training score =  (0.9645072363886974, 0.94432654380301884)
-Iteration = 9 training score =  (0.97139903514817372, 0.95846429719230608)
-Iteration = 10 training score =  (0.98483804272915232, 0.97654726505768641)
-Iteration = 11 training score =  (0.95520330806340459, 0.92147647232595864)
-Iteration = 12 training score =  (0.95761543762922119, 0.92760770491338584)
-Iteration = 13 training score =  (0.95761543762922119, 0.9535640861309731)
-Iteration = 14 training score =  (0.99483115093039287, 0.99319189784938156)
-Iteration = 15 training score =  (0.95830461750516882, 0.9478029328816634)
-Iteration = 16 training score =  (0.97036526533425227, 0.95023279296426055)
-Iteration = 17 training score =  (0.87491385251550657, 0.88185574974878544)
-Iteration = 18 training score =  (0.98208132322536179, 0.97412867506513645)
-Iteration = 19 training score =  (0.98208132322536179, 0.96921240425770117)
-Iteration = 20 training score =  (0.99931082012405237, 0.99926731874507901)
-
+Iteration = 1 training score (micro, macro) =  (0.82046864231564454, 0.73425683013887211)
+Iteration = 2 training score (micro, macro) =  (0.80806340454858716, 0.74456037758605786)
+Iteration = 3 training score (micro, macro) =  (0.86457615437629221, 0.81442692796003602)
+Iteration = 4 training score (micro, macro) =  (0.7911784975878704, 0.71373094770884371)
+Iteration = 5 training score (micro, macro) =  (0.89972432804962099, 0.87542249190820309)
+Iteration = 6 training score (micro, macro) =  (0.92763611302549964, 0.9088732978148748)
+Iteration = 7 training score (micro, macro) =  (0.85182632667126124, 0.81010887471944715)
+Iteration = 8 training score (micro, macro) =  (0.97656788421778085, 0.96489939143013048)
+Iteration = 9 training score (micro, macro) =  (0.94348725017229496, 0.9126982228176902)
+Iteration = 10 training score (micro, macro) =  (0.9490006891798759, 0.9190183124564415)
+Iteration = 11 training score (micro, macro) =  (0.97036526533425227, 0.9551653827583001)
+Iteration = 12 training score (micro, macro) =  (0.98552722260509995, 0.97969254808273387)
+Iteration = 13 training score (micro, macro) =  (0.98173673328738786, 0.97195835771850936)
+Iteration = 14 training score (micro, macro) =  (0.96898690558235701, 0.95406559484322584)
+Iteration = 15 training score (micro, macro) =  (0.96485182632667121, 0.95115685033271546)
+Iteration = 16 training score (micro, macro) =  (0.98242591316333561, 0.97255695835887968)
+Iteration = 17 training score (micro, macro) =  (0.99448656099241906, 0.99093032206893028)
+Iteration = 18 training score (micro, macro) =  (0.99655410062026184, 0.99438097185357621)
+Iteration = 19 training score (micro, macro) =  (0.99414197105444524, 0.99027974759341186)
+Iteration = 20 training score (micro, macro) =  (0.99758787043418329, 0.9965354874902338)
 
 3- classifier f-measures on the test set:
-micro averaged = 0.828
-macro averaged = 0.735
+micro averaged = 0.8266
+macro averaged = 0.7255
+
 4-
 random shuffling: since this is a online update, random shuffling would help generalize.
 learning rate: from the lecture slides, we set the learning rate to 1. but we also tried
 other learning rates with no significant improvement.
-number of iterations: we used 5 iteration. After 5 iteration, the f score start to decline
+number of iterations: we used 20 iteration.
 weight averaging: weight averaging should help generalized. But we don't see significant improvement
 ---------------------------------------------------------------------------------
 Part 4)
