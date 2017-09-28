@@ -182,7 +182,7 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
     m = np.zeros((len(senses), len(vocabulary) + 1))
     # Training
     alpha = 1 # learning rate
-    iterations = 5
+    iterations = 20
     for iteration in range(1, iterations+1):
         # Update weights based on training data
         for i in range(len(train_labels)):
@@ -406,8 +406,10 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
 
     # Compute p(s): probability that a text will have sense s
     # Compute p(w|s): probability that context word j will appear in a text that has sense y for 'line'
+    # Compute p(s|w) = p(s, w) / p(w) = p(w|s) * p(s) / sum_j( p(w|s_j) * p(s_j) )
     prob_s = dict()
     prob_w_given_s = dict()
+    prob_s_given_w = dict()
     alpha = 1 # smoothing constant
     for sense in senses:
         prob_s[sense] = float(count_s[sense]) / len(train_labels)
@@ -416,6 +418,18 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
                 float(count_s_w[(sense, word)] + alpha)
                 / (count_s_all_w[sense] + alpha * len(vocabulary))
                 )
+    prob_w = dict()
+    for word in context_words:
+        prob_w[word] = 0
+        for sense in senses:
+            prob_w[word] += prob_w_given_s[(sense, word)] * prob_s[sense]
+    for sense in senses:
+        for word in context_words:
+            prob_s_given_w[(sense, word)] = (
+                float(prob_w_given_s[(sense, word)] * prob_s[sense])
+                / prob_w[word]
+            )
+
     # Solution to Part 2.2
     print "\nSolution to Part 2.2"
     print "p(s):"
@@ -425,14 +439,18 @@ def run_part2_context_words(train_texts, train_targets, train_labels,
     for sense in senses:
         for word in context_words:
             print sense, word, prob_w_given_s[(sense, word)]
+    print "p(s|w):"
+    for sense in senses:
+        for word in context_words:
+            print sense, word, prob_s_given_w[(sense, word)]
 
     # Verify total probability sums to 1
     """
-    prob_sum = 0.0
-    for sense in senses:
-        for word in vocabulary:
-            prob_sum += prob_w_given_s[(sense, word)] * prob_s[sense]
-    print "prob_sum = ", prob_sum
+    for word in context_words:
+        prob_sum = 0.0
+        for sense in senses:
+            prob_sum += prob_s_given_w[(sense, word)]
+        print "prob_sum = ", prob_sum, "for word", word
     raw_input("Press to continue")
     """
 
@@ -595,41 +613,21 @@ if __name__ == "__main__":
     dev_labels, dev_targets, dev_texts = read_dataset('dev')
     test_labels, test_targets, test_texts = read_dataset('test')
 
-
-    # test_score = run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labels,
-    #                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    # print test_score
-
+    # running the classifier
+    """
+    accuracy_baseline = run_baseline_classifier(train_texts, train_targets, train_labels,
+                dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+    print('Test accuracy for baseline classifier', accuracy_baseline)
+    run_part2_context_words(train_texts, train_targets, train_labels,
+                dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
     test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print '\nSolution to Part 2.4'
     print test_scores
-
-    # pos, pos_vocab = pos_feature(train_texts, train_targets)
-    # splited = split_pos(pos, train_labels)
-
-
-    # # write_to_file(dev_texts, 'dev_text_shuffle.txt')
-    #
-    # #running the classifier
-    #
-    # accuracy_baseline = run_baseline_classifier(train_texts, train_targets, train_labels,
-    #             dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
-    #
-    # print('Test accuracy for baseline classifier', accuracy_baseline)
-    #
-    # run_part2_context_words(train_texts, train_targets, train_labels,
-    #             dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
-    #
-    # test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
-    #             dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    # print '\nSolution to Part 2.4'
-    # print test_scores
-
-    # run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
-    #     dev_labels, test_texts, test_targets, test_labels)
-    #
-    #test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
-    #                dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    #print '\nSolution to Part 3.3'
-    #print test_score
+    run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
+        dev_labels, test_texts, test_targets, test_labels)
+    test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
+                    dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    print '\nSolution to Part 3.3'
+    print test_score
+    """

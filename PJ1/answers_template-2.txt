@@ -3,21 +3,21 @@ Team: Project Group 5
 2- Haoying Dai
 3- Da He
 
-Email: 
+Email:
 
 ---------------------------------------------------------------------------------
 Part 1)
 
-1- baseline accuracy = 55.5%
+1- baseline accuracy = 55.54%
 2- Cohen’s Kappa = 1 (completely agreed with gold annotations)
 
 ---------------------------------------------------------------------------------
 Part 2)
-1- 
+1-
 
 s   | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-c(s)|  273 |    253     |    251    |  312  |  15256  |  287
+c(s)|  273 |    253     |    251    |  312  |  1526   |  287
 
 
 s        | cord | division   | formation | phone | product | text
@@ -44,29 +44,29 @@ p(s)|  9.4 |    8.7     |   8.6     |  10.7 |   52.6  |  9.9
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s|time)| 0.047 | 0.048     |   0.059   | 0.052 | 0.046   | 0.064
+p(s|time)| 8.90 |  8.47      |   10.36   | 11.25 | 48.33   | 12.68
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s|loss)|7.2e-3|  3.4e-3    |   3.5e-3  | 9.7e-3| 0.025   | 3.2e-3
+p(s|loss)| 4.32 |  1.91      |   1.92    | 6.66  | 83.19   | 2.00
 
 
 s          | cord | division   | formation | phone | product | text
 ---------------------------------------------------------------------
-p(s|export)|3.6e-3|  3.4e-3    |   3.5e-3  | 6.5e-3| 4.2e-3  | 3.2e-3
+p(s|export)| 8.21 |   7.26     |   7.31    | 16.87 | 52.73  | 7.61
 
 
 3- for the sentence X = "and i can tell you that i 'm an absolute nervous wreck every time she performs . i have her practice the last two lines on each page , so I can learn exactly when to turn the page -- just one of the tricks to this trade that i 've learned the hard way ."
 
 s     | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s|X)|   0  |    0       |    0      |  0    |    1    |    0
+p(s|X)| 0.03 |  6.1e-06   |  1.3e-04  |2.3e-03| 2.3e-09 | 99.97
 
 4- classifier f-measures on the test set:
-micro averaged = 0.849
-macro averaged = 0.761
+micro averaged = 0.8523
+macro averaged = 0.7677
 
-5- 
+5-
 smoothing: we used add 1 smoothing as suggested in the lecture.
 log-probabilities: use log to improve numerical stability.
 ---------------------------------------------------------------------------------
@@ -141,14 +141,12 @@ B) Feature B:
 1- Description
 
 2- naive-bayes f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged =
+macro averaged =
 
 3- perceptron f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged =
+macro averaged =
 
 
 4- Conclusions:
-
-
