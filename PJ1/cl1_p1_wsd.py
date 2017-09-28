@@ -219,11 +219,11 @@ def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labe
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels):
 
     senses = ['cord', 'division', 'formation', 'phone', 'product', 'text']
-    # context_words = list(set([word for text in train_texts for word in text]))
+    # vocabulary = list(set([word for text in train_texts for word in text]))
     window_size = 5
-    context_words = create_vocabulary(train_texts, train_targets, window_size)
+    vocabulary = create_vocabulary(train_texts, train_targets, window_size)
     texts = split_text(train_texts, train_labels)
-    num_vocab = len(context_words)
+    num_vocab = len(vocabulary)
     num_doc = len(train_labels)
     pos_train, pos_vocab = pos_feature(train_texts, train_targets)
     pos_splited = split_pos(pos_train, train_labels)
@@ -234,13 +234,13 @@ def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labe
     num_pos_vocab = len(pos_vocab)
     alpha = 1
     weight_matrix = []
-    # Dimention = #sense * (#context_words + 1)
+    # Dimention = #sense * (#vocabulary + 1)
     for sense in senses:
         count_s_all_w = len(texts[sense])
         count_s_all_pos = len(pos_splited[sense])
         weight = []
         norm = (count_s_all_w + count_s_all_pos + alpha * (num_vocab + num_pos_vocab))
-        for word in context_words:
+        for word in vocabulary:
             prob_w_given_s = float(texts[sense].count(word) + alpha) / norm
             weight.append(math.log(prob_w_given_s))
         for pos in pos_vocab:
@@ -252,14 +252,14 @@ def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labe
 
     # Testing
     # Vectorize text using bag-of-words model and create a matrix
-    # Dimension = #test * (#context_words + 1)
+    # Dimension = #test * (#vocabulary + 1)
     # test_text_matrix = []
     # for text in test_texts:
-    #     text_vec = [text.count(word) for word in context_words] + [1]
+    #     text_vec = [text.count(word) for word in vocabulary] + [1]
     #     test_text_matrix.append(text_vec)
 
     test_text_matrix = np.array(map(
-        lambda text: [text.count(word) for word in context_words],
+        lambda text: [text.count(word) for word in vocabulary],
         test_texts
     ))
 
@@ -629,7 +629,7 @@ if __name__ == "__main__":
     # run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
     #     dev_labels, test_texts, test_targets, test_labels)
     #
-    test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
-                    dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    print '\nSolution to Part 3.3'
-    print test_score
+    #test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
+    #                dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    #print '\nSolution to Part 3.3'
+    #print test_score
