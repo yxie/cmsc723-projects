@@ -116,7 +116,8 @@ weight averaging: weight averaging should help generalized. But we don't see sig
 Part 4)
 A) Feature A:
 
-1- My new feature is part of speech which use nltk.pos_tag() function to
+1- Description
+My new feature is part of speech which use nltk.pos_tag() function to
 find all POS in a window centered at the target.
 
 2- naive-bayes f-measures on the test set:
@@ -139,14 +140,18 @@ new feature alone is complete noise, and the 56% score is mainly due to the prio
 B) Feature B:
 
 1- Description
+New feature B is the part-of-speech for last word of target. We try to see if
+POS at specific location will help. 
 
 2- naive-bayes f-measures on the test set:
 micro averaged = 0.8587
 macro averaged = 0.7809
 
 3- perceptron f-measures on the test set:
-micro averaged =
-macro averaged =
-
+micro averaged = 0.8299
+macro averaged = 0.7364
 
 4- Conclusions:
+By looking at the POS of last word, the accuracy of both classifiers are slightly
+improved. This indicates that position of a word (which bag-of-words model
+does not preserve) might actually plays an important role.

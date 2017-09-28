@@ -327,12 +327,21 @@ def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labe
         train_texts
     ))
 
+    # new feature 1
     pos_train, pos_vocab = pos_feature(train_texts, train_targets)
     train_pos_matrix = np.array(map(
-        lambda pos_train_entry: [pos_train_entry.count(pos) for pos in pos_vocab] + [1],
+        lambda pos_train_entry: [pos_train_entry.count(pos) for pos in pos_vocab],
         pos_train
     ))
-    train_matrix = np.concatenate((train_text_matrix, train_pos_matrix), axis=1)
+
+    # new feature 2
+    posLast_train, posLast_vocab = posLast_feature(train_texts, train_targets)
+    train_posLast_matrix = np.array(map(
+        lambda posLast_train_entry: [posLast_train_entry.count(posLast) for posLast in posLast_vocab] + [1],
+        posLast_train
+    ))
+
+    train_matrix = np.concatenate((train_text_matrix, train_pos_matrix, train_posLast_matrix), axis=1)
 
     test_text_matrix = np.array(map(
         lambda text: [text.count(word) for word in vocabulary],
@@ -340,20 +349,27 @@ def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labe
     ))
     pos_tests, _ = pos_feature(test_texts, test_targets)
     test_pos_matrix = np.array(map(
-        lambda pos_test: [pos_test.count(pos) for pos in pos_vocab] + [1],
+        lambda pos_test: [pos_test.count(pos) for pos in pos_vocab],
         pos_tests
     ))
-    test_matrix = np.concatenate((test_text_matrix, test_pos_matrix), axis=1)
+    posLast_tests, _ = posLast_feature(test_texts, test_targets)
+    test_posLast_matrix = np.array(map(
+        lambda posLast_test: [posLast_test.count(posLast) for posLast in posLast_vocab] + [1],
+        posLast_tests
+    ))
+    test_matrix = np.concatenate((test_text_matrix, test_pos_matrix, test_posLast_matrix), axis=1)
 
     # Weight matrix, dimension = #sense * (vocabulary_size + 1)
     # Random initialization
     # weight_matrix = np.random.rand(len(senses), len(vocabulary) + 1)
     # Initialized to 0
-    weight_matrix = np.zeros((len(senses), len(vocabulary) + len(pos_vocab) + 1))
-    m = np.zeros((len(senses), len(vocabulary) + len(pos_vocab) + 1))
+    weight_matrix = np.zeros((len(senses), len(vocabulary) + len(pos_vocab) + len(posLast_vocab) + 1))
+
     # Training
-    alpha = 1  # learning rate
+    alpha = 1 # learning rate
     iterations = 20
+    m = weight_matrix
+    m_count = 0
     for iteration in range(1, iterations + 1):
         # Update weights based on training data
         for i in range(len(train_labels)):
@@ -367,14 +383,15 @@ def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labe
                 weight_matrix[p_index] = weight_matrix[p_index] - alpha * text_vec
                 weight_matrix[c_index] = weight_matrix[c_index] + alpha * text_vec
                 m = m + weight_matrix
+                m_count += 1
         # Evaluate accuracy on training data
         predicted_labels = get_predicted_labels(train_matrix, weight_matrix, senses)
         train_score = eval(train_labels, predicted_labels)
         # print train_score[0], ', '
         print 'Iteration =', iteration, 'training score = ', train_score
-    m = m / iterations
+    weight_matrix = m / m_count
     # Testing: evaluate accuracy on test data
-    predicted_labels = get_predicted_labels(test_matrix, m, senses)
+    predicted_labels = get_predicted_labels(test_matrix, weight_matrix, senses)
     test_score = eval(test_labels, predicted_labels)
     return test_score
 
@@ -677,6 +694,6 @@ if __name__ == "__main__":
     print test_scores
     """
 
-    test_scores = run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labels,
+    test_scores = run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labels,
         dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print test_scores
