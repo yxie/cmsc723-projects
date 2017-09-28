@@ -140,8 +140,8 @@ new feature alone is complete noise, and the 56% score is mainly due to the prio
 B) Feature B:
 
 1- Description
-New feature B is the part-of-speech for last word of target. We try to see if
-POS at specific location will help. 
+New feature B is the part-of-speech of previous word before the target. We try to see if
+POS at specific location will help.
 
 2- naive-bayes f-measures on the test set:
 micro averaged = 0.8587
@@ -152,6 +152,6 @@ micro averaged = 0.8299
 macro averaged = 0.7364
 
 4- Conclusions:
-By looking at the POS of last word, the accuracy of both classifiers are slightly
+By looking at the POS of previous word, the accuracy of both classifiers are slightly
 improved. This indicates that position of a word (which bag-of-words model
 does not preserve) might actually plays an important role.
