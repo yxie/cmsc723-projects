@@ -136,6 +136,7 @@ def run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
         index = np.argmax(product[i])
         sense = senses[index]
         predicted_labels.append(sense)
+    # write_predictions(predicted_labels, 'q4p2.txt')
     return eval(test_labels, predicted_labels)
 
 """
@@ -209,6 +210,7 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
     weight_matrix = m / m_count
     predicted_labels = get_predicted_labels(test_text_matrix, weight_matrix, senses)
     test_score = eval(test_labels, predicted_labels)
+    # write_predictions(predicted_labels, 'q3p3.txt')
     return test_score
 
 """
@@ -303,6 +305,7 @@ def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labe
         index = np.argmax(product[i])
         sense = senses[index]
         predicted_labels.append(sense)
+    # write_predictions(predicted_labels, 'q4p4_nb.txt')
     return eval(test_labels, predicted_labels)
 
 
@@ -394,6 +397,7 @@ def run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labe
     # Testing: evaluate accuracy on test data
     predicted_labels = get_predicted_labels(test_matrix, weight_matrix, senses)
     test_score = eval(test_labels, predicted_labels)
+    # write_predictions(predicted_labels, 'q4p4_pn.txt')
     return test_score
 
 
