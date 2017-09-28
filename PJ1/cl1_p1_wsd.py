@@ -228,27 +228,40 @@ def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labe
     texts = split_text(train_texts, train_labels)
     num_vocab = len(vocabulary)
     num_doc = len(train_labels)
+
+    # new feature 1
     pos_train, pos_vocab = pos_feature(train_texts, train_targets)
     pos_splited = split_pos(pos_train, train_labels)
     # for sense in senses:
     #     while 'NN' in pos_splited[sense]: pos_splited[sense].remove('NN')
     #     while 'NNS' in pos_splited[sense]: pos_splited[sense].remove('NNS')
 
+    # new feature 2
+    posLast_train, posLast_vocab = posLast_feature(train_texts, train_targets)
+    posLast_splited = split_posLast(posLast_train, train_labels)
+
     num_pos_vocab = len(pos_vocab)
+    num_posLast_vocab = len(posLast_vocab)
     alpha = 1
     weight_matrix = []
     # Dimention = #sense * (#vocabulary + 1)
     for sense in senses:
         count_s_all_w = len(texts[sense])
         count_s_all_pos = len(pos_splited[sense])
+        count_s_all_posLast = len(posLast_splited[sense])
         weight = []
-        norm = (count_s_all_w + count_s_all_pos + alpha * (num_vocab + num_pos_vocab))
+        norm_w = count_s_all_w + alpha * num_vocab
+        norm_pos = count_s_all_pos + alpha * num_pos_vocab
+        norm_posLast = count_s_all_posLast + alpha * num_posLast_vocab
         for word in vocabulary:
-            prob_w_given_s = float(texts[sense].count(word) + alpha) / norm
+            prob_w_given_s = float(texts[sense].count(word) + alpha) / norm_w
             weight.append(math.log(prob_w_given_s))
         for pos in pos_vocab:
-            prob_pos_given_s = float(pos_splited[sense].count(pos) + alpha) / norm
+            prob_pos_given_s = float(pos_splited[sense].count(pos) + alpha) / norm_pos
             weight.append(math.log(prob_pos_given_s))
+        for posLast in posLast_vocab:
+            prob_posLast_given_s = float(posLast_splited[sense].count(posLast) + alpha) / norm_posLast
+            weight.append(math.log(prob_posLast_given_s))
         prob_s = float(train_labels.count(sense)) / num_doc
         weight.append(math.log(prob_s))
         weight_matrix.append(weight)
@@ -268,14 +281,20 @@ def run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labe
 
     pos_tests, _= pos_feature(test_texts, test_targets)
     test_pos_matrix = np.array(map(
-        lambda pos_test: [pos_test.count(pos) for pos in pos_vocab] + [1],
+        lambda pos_test: [pos_test.count(pos) for pos in pos_vocab],
         pos_tests
+    ))
+
+    posLast_tests, _= posLast_feature(test_texts, test_targets)
+    test_posLast_matrix = np.array(map(
+        lambda posLast_test: [posLast_test.count(posLast) for posLast in posLast_vocab] + [1],
+        posLast_tests
     ))
 
     weight_matrix = np.array(weight_matrix)
     # print test_text_matrix.shape, test_pos_matrix.shape, len(pos_vocab)
 
-    test_matrix = np.concatenate((test_text_matrix, test_pos_matrix), axis=1)
+    test_matrix = np.concatenate((test_text_matrix, test_pos_matrix, test_posLast_matrix), axis=1)
     # Dimention = #test * #sense
     product = test_matrix.dot(weight_matrix.transpose())
     predicted_labels = []
@@ -596,11 +615,20 @@ def pos_feature(texts, targets):
     pos_vocab = list(set.union(*map(set,pos)))
     return pos, pos_vocab
 
-def pos_feature_all(texts):
-    pos_l_l_t = [nltk.pos_tag(texts[i]) for i in range(len(texts))]
-    pos = [[pos_t[1] for pos_t in pos_l_t] for pos_l_t in pos_l_l_t]
-    pos_vocab = list(set.union(*map(set, pos)))
-    return pos, pos_vocab
+def posLast_feature(texts, targets):
+    posLasts = []
+    """
+    for i in range(len(texts)):
+        pos = 'Unknown'
+        if targets[i] - 1 >= 0:
+            word_pos = nltk.pos_tag([texts[i][targets[i]-1]])
+            pos = word_pos[0][1]
+        posLasts = posLasts + [pos]
+    """
+    posLasts = [nltk.pos_tag([texts[i][targets[i]-1]])[0][1] for i in range(len(texts))]
+    posLast_vocab = list(set(posLasts))
+
+    return posLasts, posLast_vocab
 
     # return [nltk.pos_tag(word) for text in train_texts for word in text]
 def split_pos(pos, label):
@@ -608,6 +636,12 @@ def split_pos(pos, label):
     for i in range(len(pos)):
         pos_splited[label[i]]=pos_splited.get(label[i],[])+pos[i]
     return pos_splited
+
+def split_posLast(posLast, label):
+    posLast_splited = dict()
+    for i in range(len(posLast)):
+        posLast_splited[label[i]] = posLast_splited.get(label[i], []) + [posLast[i]]
+    return posLast_splited
 
 
 if __name__ == "__main__":
@@ -621,21 +655,28 @@ if __name__ == "__main__":
     accuracy_baseline = run_baseline_classifier(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
     print('Test accuracy for baseline classifier', accuracy_baseline)
+
     run_part2_context_words(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets, dev_labels, test_texts, test_targets, test_labels)
+
     test_scores = run_bow_naivebayes_classifier(train_texts, train_targets, train_labels,
                 dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print '\nSolution to Part 2.4'
     print test_scores
+
     run_part3_weight_change(train_texts, train_targets, train_labels, dev_texts, dev_targets,
         dev_labels, test_texts, test_targets, test_labels)
-    test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
-                    dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
-    print '\nSolution to Part 3.3'
-    print test_score
-    """
 
     test_score = run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
                     dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print '\nSolution to Part 3.3'
     print test_score
+
+    test_scores = run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labels,
+        dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    print test_scores
+    """
+
+    test_scores = run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labels,
+        dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
+    print test_scores

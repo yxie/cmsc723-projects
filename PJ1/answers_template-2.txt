@@ -128,7 +128,7 @@ micro averaged = 0.8170
 macro averaged = 0.7102
 
 4- Conclusions:
-Above scores are obtained from concatinating my new feature with the traditional
+Above scores are obtained from concatenating my new feature with the traditional
 bag of words feature. The f score does not have significant changes comparing to
 using traditional feature along. I also used my new feature along. The f score
 obtained is similar to the baseline frequency count (around 57%). My new feature
@@ -141,8 +141,8 @@ B) Feature B:
 1- Description
 
 2- naive-bayes f-measures on the test set:
-micro averaged =
-macro averaged =
+micro averaged = 0.8587
+macro averaged = 0.7809
 
 3- perceptron f-measures on the test set:
 micro averaged =
