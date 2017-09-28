@@ -154,6 +154,7 @@ def run_bow_perceptron_classifier(train_texts, train_targets,train_labels,
     vocabulary = create_vocabulary(train_texts, train_targets, window_size)
 
     c = zip(train_texts, train_labels, train_targets)
+    random.seed(1)
     random.shuffle(c)
 
     train_texts = [e[0] for e in c]
@@ -692,8 +693,8 @@ if __name__ == "__main__":
     test_scores = run_extended_bow_naivebayes_classifier(train_texts, train_targets,train_labels,
         dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print test_scores
-    """
 
     test_scores = run_extended_bow_perceptron_classifier(train_texts, train_targets,train_labels,
         dev_texts, dev_targets,dev_labels, test_texts, test_targets, test_labels)
     print test_scores
+    """

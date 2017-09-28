@@ -81,30 +81,30 @@ Weight change for correct label:
 [('.', 1), ('``', 1), ('her', 2), ('with', 1), ('plucky', 1), ('an', 1), ('to', 2), ('plank', 1), ('jean-jacques', 1), ('last', 1), ('by', 1), ('line', 1), ('tied', 1), ('painting', 1), ('sits', 1), ('drawing', 1), ('another', 1), ('the', 2), ('much-quoted', 1), ('not', 1), ('shows', 1), ('friend', 1), ('lady', 1), ('a', 1), ('madame', 1), ('room', 1), ('before', 1), (',', 3), ('dog', 1), ('in', 1), ('down', 1), ('managed', 1), ('did', 1), ('french', 1), ('little', 1), ('rolland', 1), ('!', 1), ('exquisite', 1), ('harp', 1), ('pet', 1), ('ah', 1), ('liberty', 1), ('she', 1), ('and', 1), ('of', 1), ('hauer', 1), ('lafayette', 1), ('who', 1), ('wordsworth', 1)]
 
 2-
-Iteration = 1 training score (micro, macro) =  (0.82046864231564454, 0.73425683013887211)
-Iteration = 2 training score (micro, macro) =  (0.80806340454858716, 0.74456037758605786)
-Iteration = 3 training score (micro, macro) =  (0.86457615437629221, 0.81442692796003602)
-Iteration = 4 training score (micro, macro) =  (0.7911784975878704, 0.71373094770884371)
-Iteration = 5 training score (micro, macro) =  (0.89972432804962099, 0.87542249190820309)
-Iteration = 6 training score (micro, macro) =  (0.92763611302549964, 0.9088732978148748)
-Iteration = 7 training score (micro, macro) =  (0.85182632667126124, 0.81010887471944715)
-Iteration = 8 training score (micro, macro) =  (0.97656788421778085, 0.96489939143013048)
-Iteration = 9 training score (micro, macro) =  (0.94348725017229496, 0.9126982228176902)
-Iteration = 10 training score (micro, macro) =  (0.9490006891798759, 0.9190183124564415)
-Iteration = 11 training score (micro, macro) =  (0.97036526533425227, 0.9551653827583001)
-Iteration = 12 training score (micro, macro) =  (0.98552722260509995, 0.97969254808273387)
-Iteration = 13 training score (micro, macro) =  (0.98173673328738786, 0.97195835771850936)
-Iteration = 14 training score (micro, macro) =  (0.96898690558235701, 0.95406559484322584)
-Iteration = 15 training score (micro, macro) =  (0.96485182632667121, 0.95115685033271546)
-Iteration = 16 training score (micro, macro) =  (0.98242591316333561, 0.97255695835887968)
-Iteration = 17 training score (micro, macro) =  (0.99448656099241906, 0.99093032206893028)
-Iteration = 18 training score (micro, macro) =  (0.99655410062026184, 0.99438097185357621)
-Iteration = 19 training score (micro, macro) =  (0.99414197105444524, 0.99027974759341186)
-Iteration = 20 training score (micro, macro) =  (0.99758787043418329, 0.9965354874902338)
+Iteration = 1 training score (micro, macro) =  (0.75534114403859398, 0.61447952443604403)
+Iteration = 2 training score (micro, macro) =  (0.75671950379048936, 0.64796512378051274)
+Iteration = 3 training score (micro, macro) =  (0.8552722260509994, 0.75388334762014086)
+Iteration = 4 training score (micro, macro) =  (0.87043418332184697, 0.81814650085722862)
+Iteration = 5 training score (micro, macro) =  (0.92453480358373541, 0.89152185735625433)
+Iteration = 6 training score (micro, macro) =  (0.95623707787732593, 0.93998313727854488)
+Iteration = 7 training score (micro, macro) =  (0.97622329427980703, 0.96299503394220609)
+Iteration = 8 training score (micro, macro) =  (0.97139903514817372, 0.95587696962690716)
+Iteration = 9 training score (micro, macro) =  (0.96416264645072369, 0.94403332591098066)
+Iteration = 10 training score (micro, macro) =  (0.9734665747760165, 0.96190493773232311)
+Iteration = 11 training score (micro, macro) =  (0.9600275671950379, 0.937838967745662)
+Iteration = 12 training score (micro, macro) =  (0.98931771192281182, 0.98355941344025466)
+Iteration = 13 training score (micro, macro) =  (0.96898690558235701, 0.95057792398796703)
+Iteration = 14 training score (micro, macro) =  (0.99345279117849761, 0.99121435096134203)
+Iteration = 15 training score (micro, macro) =  (0.98966230186078563, 0.98504890318751748)
+Iteration = 16 training score (micro, macro) =  (0.99310820124052379, 0.98884843687660229)
+Iteration = 17 training score (micro, macro) =  (0.95968297725706408, 0.93639447386558627)
+Iteration = 18 training score (micro, macro) =  (0.97174362508614753, 0.96096885549465494)
+Iteration = 19 training score (micro, macro) =  (0.99448656099241906, 0.99165635931702656)
+Iteration = 20 training score (micro, macro) =  (0.9979324603721571, 0.9964792603006899)
 
 3- classifier f-measures on the test set:
-micro averaged = 0.8266
-macro averaged = 0.7255
+micro averaged = 0.8315
+macro averaged = 0.7357
 
 4-
 random shuffling: since this is a online update, random shuffling would help generalize.
@@ -152,6 +152,6 @@ micro averaged = 0.8299
 macro averaged = 0.7364
 
 4- Conclusions:
-By looking at the POS of previous word, the accuracy of both classifiers are slightly
-improved. This indicates that position of a word (which bag-of-words model
-does not preserve) might actually plays an important role.
+After adding feature B, the accuracy of both classifiers are slightly improved
+(compared to adding feature A only). This indicates that position of a word
+(which bag-of-words model does not preserve) might actually plays an important role.
