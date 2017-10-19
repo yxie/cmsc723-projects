@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/cl1_p1_wsd.py" line="453" mnemonic="7" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fdfff7f6-13a4-41ea-9496-cdf07be7bd51" name="Default" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <splitter split-orientation="horizontal" split-proportion="0.21875">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="cl1_p1_wsd.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/cl1_p1_wsd.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="4104">
+                  <caret line="362" column="3" lean-forward="false" selection-start-line="362" selection-start-column="3" selection-end-line="362" selection-end-column="3" />
+                  <folding>
+                    <element signature="e#491#502#0" expanded="true" />
+                    <marker date="1506221537446" expanded="true" signature="8335:10950" ph="..." />
+                    <marker date="1506221537446" expanded="true" signature="8336:10949" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                    <marker date="1506221537446" expanded="true" signature="11393:14159" ph="..." />
+                    <marker date="1506221537446" expanded="true" signature="11398:14158" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                    <marker date="1506221537446" expanded="true" signature="20213:20337" ph="..." />
+                    <marker date="1506221537446" expanded="true" signature="20281:20337" ph="..." />
+                    <marker date="1506221537446" expanded="true" signature="20796:21017" ph="..." />
+                    <marker date="1506221537446" expanded="true" signature="20831:21017" ph="..." />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="cl1_p1_wsd.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/../../../PJ1/cl1_p1_wsd.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="328">
+                  <caret line="27" column="34" lean-forward="true" selection-start-line="27" selection-start-column="34" selection-end-line="27" selection-end-column="34" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="wsd_train.txt" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/data/wsd_train.txt">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="288">
+                  <caret line="16" column="53" lean-forward="false" selection-start-line="16" selection-start-column="53" selection-end-line="16" selection-end-column="53" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <splitter split-orientation="horizontal" split-proportion="0.38">
+          <split-first>
+            <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+              <file leaf-file-name="answers_template-2.txt" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/answers_template-2.txt">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="324">
+                      <caret line="18" column="48" lean-forward="false" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="cl1_p1_wsd.py" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/cl1_p1_wsd.py">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="269">
+                      <caret line="572" column="63" lean-forward="false" selection-start-line="572" selection-start-column="63" selection-end-line="572" selection-end-column="63" />
+                      <caret line="564" column="40" lean-forward="true" selection-start-line="564" selection-start-column="40" selection-end-line="564" selection-end-column="40" />
+                      <folding>
+                        <element signature="e#491#502#0" expanded="true" />
+                        <marker date="1506221537446" expanded="true" signature="11393:14159" ph="..." />
+                        <marker date="1506221537446" expanded="true" signature="11398:14158" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                        <marker date="1506221537446" expanded="true" signature="20796:21017" ph="..." />
+                        <marker date="1506221537446" expanded="true" signature="20831:21017" ph="..." />
+                        <marker date="1506221537446" expanded="true" signature="22948:23289" ph="..." />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="pos_info.txt" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/pos_info.txt">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="147">
+                      <caret line="2233" column="23" lean-forward="false" selection-start-line="2233" selection-start-column="23" selection-end-line="2233" selection-end-column="23" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-first>
+          <split-second>
+            <leaf>
+              <file leaf-file-name="cl1_p1_wsd.py" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/cl1_p1_wsd.py">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="392">
+                      <caret line="542" column="55" lean-forward="true" selection-start-line="542" selection-start-column="55" selection-end-line="542" selection-end-column="55" />
+                      <folding>
+                        <element signature="e#491#502#0" expanded="true" />
+                        <marker date="1506221537446" expanded="true" signature="8335:10950" ph="..." />
+                        <marker date="1506221537446" expanded="true" signature="8336:10949" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-second>
+        </splitter>
+      </split-second>
+    </splitter>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>create_vocabulary</find>
+      <find>get_prob_text_given_sense</find>
+      <find>train_texts</find>
+      <find>window</find>
+      <find>file</find>
+      <find>write_to_file</find>
+      <find>but kraft</find>
+      <find>run_bow_naivebayes_classifier</find>
+      <find>sense</find>
+      <find>dict()</find>
+      <find>count</find>
+      <find>test_texts</find>
+      <find>nn</find>
+      <find>among the more</find>
+      <find>among the</find>
+      <find>set</find>
+      <find>set(</find>
+      <find>volca</find>
+      <find>vocab</find>
+      <find>line</find>
+      <find>pos</find>
+      <find>pos_feature</find>
+      <find>get_predicted_labels</find>
+      <find>split_text</find>
+    </findStrings>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/../../../PJ1/cl1_p1_wsd.py" />
+        <option value="$PROJECT_DIR$/data/wsd_dev.txt" />
+        <option value="$PROJECT_DIR$/dev_text_shuffle.txt" />
+        <option value="$PROJECT_DIR$/try.py" />
+        <option value="$PROJECT_DIR$/trythis.py" />
+        <option value="$PROJECT_DIR$/answers_template-2.txt" />
+        <option value="$PROJECT_DIR$/cl1_p1_wsd.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Buildout</id>
+          </State>
+          <State>
+            <id>Python</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>PyPep8Inspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/data/wsd_train.txt" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.cl1_p1_wsd">
+    <configuration name="cl1_p1_wsd (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../../PJ1" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="PJ1" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../../PJ1/cl1_p1_wsd.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="cl1_p1_wsd" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="PJ1" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cl1_p1_wsd.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="trythis" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="PJ1" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/trythis.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <list size="3">
+      <item index="0" class="java.lang.String" itemvalue="Python.cl1_p1_wsd" />
+      <item index="1" class="java.lang.String" itemvalue="Python.cl1_p1_wsd (1)" />
+      <item index="2" class="java.lang.String" itemvalue="Python.trythis" />
+    </list>
+    <recent_temporary>
+      <list size="3">
+        <item index="0" class="java.lang.String" itemvalue="Python.cl1_p1_wsd" />
+        <item index="1" class="java.lang.String" itemvalue="Python.trythis" />
+        <item index="2" class="java.lang.String" itemvalue="Python.cl1_p1_wsd (1)" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fdfff7f6-13a4-41ea-9496-cdf07be7bd51" name="Default" comment="" />
+      <created>1505700258762</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1505700258762</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13515624" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32847276" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3998465" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296875" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../../../PJ1/cl1_p1_wsd.py</url>
+          <line>158</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+      <option name="time" value="33" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/answers_template-2.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="15" column="37" lean-forward="false" selection-start-line="15" selection-start-column="37" selection-end-line="15" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../PJ1/cl1_p1_wsd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" column="100" lean-forward="false" selection-start-line="14" selection-start-column="100" selection-end-line="14" selection-end-column="100" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cl1_p1_wsd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4104">
+          <caret line="233" column="3" lean-forward="false" selection-start-line="233" selection-start-column="3" selection-end-line="233" selection-end-column="3" />
+          <folding>
+            <element signature="e#491#502#0" expanded="true" />
+            <marker date="1506221537446" expanded="true" signature="11393:14159" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="11398:14158" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1506221537446" expanded="true" signature="20796:21017" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="20831:21017" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="22948:23289" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/answers_template-2.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../PJ1/cl1_p1_wsd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="640">
+          <caret line="32" column="25" lean-forward="false" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cl1_p1_wsd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4540">
+          <caret line="232" column="3" lean-forward="false" selection-start-line="232" selection-start-column="3" selection-end-line="232" selection-end-column="3" />
+          <folding>
+            <element signature="e#491#502#0" expanded="true" />
+            <marker date="1506221537446" expanded="true" signature="11393:14159" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="11398:14158" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1506221537446" expanded="true" signature="20796:21017" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="20831:21017" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="22948:23289" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/answers_template-2.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../PJ1/cl1_p1_wsd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="640">
+          <caret line="32" column="25" lean-forward="true" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cl1_p1_wsd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4540">
+          <caret line="232" column="3" lean-forward="false" selection-start-line="232" selection-start-column="3" selection-end-line="232" selection-end-column="3" />
+          <folding>
+            <element signature="e#491#502#0" expanded="true" />
+            <marker date="1506221537446" expanded="true" signature="11393:14159" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="11398:14158" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1506221537446" expanded="true" signature="20796:21017" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="20831:21017" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="22948:23289" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="1598" column="0" lean-forward="false" selection-start-line="1598" selection-start-column="0" selection-end-line="1598" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/wsd_dev.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="191" column="17" lean-forward="false" selection-start-line="191" selection-start-column="8" selection-end-line="191" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dev_text_shuffle.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="9" column="8" lean-forward="true" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/try.py" />
+    <entry file="file://$PROJECT_DIR$/../../../PJ1/cl1_p1_wsd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="27" column="34" lean-forward="true" selection-start-line="27" selection-start-column="34" selection-end-line="27" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pos_info.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="2233" column="23" lean-forward="false" selection-start-line="2233" selection-start-column="23" selection-end-line="2233" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trythis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="20" column="21" lean-forward="true" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/wsd_train.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="16" column="53" lean-forward="false" selection-start-line="16" selection-start-column="53" selection-end-line="16" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cl1_p1_wsd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="572" column="63" lean-forward="false" selection-start-line="572" selection-start-column="63" selection-end-line="572" selection-end-column="63" />
+          <caret line="564" column="40" lean-forward="true" selection-start-line="564" selection-start-column="40" selection-end-line="564" selection-end-column="40" />
+          <folding>
+            <element signature="e#491#502#0" expanded="true" />
+            <marker date="1506221537446" expanded="true" signature="11393:14159" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="11398:14158" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1506221537446" expanded="true" signature="20796:21017" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="20831:21017" ph="..." />
+            <marker date="1506221537446" expanded="true" signature="22948:23289" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/answers_template-2.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="48" lean-forward="false" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

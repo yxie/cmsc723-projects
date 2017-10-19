@@ -1,112 +1,157 @@
-Team: 
-1- 
-2- 
-3-
+Team: Project Group 5
+1- Yang Xie
+2- Haoying Dai
+3- Da He
 
-Email: 
+Email:
 
 ---------------------------------------------------------------------------------
 Part 1)
 
-1- baseline accuracy = ?%
-2- Cohen’s Kappa = ?
+1- baseline accuracy = 55.54%
+2- Cohen’s Kappa = 1 (completely agreed with gold annotations)
 
 ---------------------------------------------------------------------------------
 Part 2)
-1- 
+1-
 
 s   | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-c(s)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+c(s)|  273 |    253     |    251    |  312  |  1526   |  287
 
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-c(s,time)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+c(s,time)|   12  |    13     |    16     |  15   |    43   |  19
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-c(s,loss)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+c(s,loss)|   1  |    0       |    0      |  2    |    23    |  0
 
 
 s          | cord | division   | formation | phone | product | text
 ---------------------------------------------------------------------
-c(s,export)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+c(s,export)|   0  |    0       |    0      |  1    |    3    |  0
 
 
 
-2-
+2- (the following values in percentage %)
 
 s   | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s)|  9.4 |    8.7     |   8.6     |  10.7 |   52.6  |  9.9
 
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s|time)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s|time)| 8.90 |  8.47      |   10.36   | 11.25 | 48.33   | 12.68
 
 s        | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s|loss)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s|loss)| 4.32 |  1.91      |   1.92    | 6.66  | 83.19   | 2.00
 
 
 s          | cord | division   | formation | phone | product | text
 ---------------------------------------------------------------------
-p(s|export)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s|export)| 8.21 |   7.26     |   7.31    | 16.87 | 52.73  | 7.61
 
 
 3- for the sentence X = "and i can tell you that i 'm an absolute nervous wreck every time she performs . i have her practice the last two lines on each page , so I can learn exactly when to turn the page -- just one of the tricks to this trade that i 've learned the hard way ."
 
 s     | cord | division   | formation | phone | product | text
 -----------------------------------------------------------------
-p(s|X)|   ?  |    ?       |    ?      |  ?    |    ?    |    ?
+p(s|X)| 0.03 |  6.1e-06   |  1.3e-04  |2.3e-03| 2.3e-09 | 99.97
 
 4- classifier f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged = 0.8523
+macro averaged = 0.7677
 
-5- 
-
+5-
+smoothing: we used add 1 smoothing as suggested in the lecture.
+log-probabilities: use log to improve numerical stability.
 ---------------------------------------------------------------------------------
 Part 3)
 
-1- 
-2- comma separated accuracies (e.g. 30,35,60): 
+1-
+Wrong label:  cord
+Weight change for wrong label:
+[('.', -1), ('``', -1), ('her', -2), ('with', -1), ('plucky', -1), ('an', -1), ('to', -2), ('plank', -1), ('jean-jacques', -1), ('last', -1), ('by', -1), ('line', -1), ('tied', -1), ('painting', -1), ('sits', -1), ('drawing', -1), ('another', -1), ('the', -2), ('much-quoted', -1), ('not', -1), ('shows', -1), ('friend', -1), ('lady', -1), ('a', -1), ('madame', -1), ('room', -1), ('before', -1), (',', -3), ('dog', -1), ('in', -1), ('down', -1), ('managed', -1), ('did', -1), ('french', -1), ('little', -1), ('rolland', -1), ('!', -1), ('exquisite', -1), ('harp', -1), ('pet', -1), ('ah', -1), ('liberty', -1), ('she', -1), ('and', -1), ('of', -1), ('hauer', -1), ('lafayette', -1), ('who', -1), ('wordsworth', -1)]
+Correct label:  text
+Weight change for correct label:
+[('.', 1), ('``', 1), ('her', 2), ('with', 1), ('plucky', 1), ('an', 1), ('to', 2), ('plank', 1), ('jean-jacques', 1), ('last', 1), ('by', 1), ('line', 1), ('tied', 1), ('painting', 1), ('sits', 1), ('drawing', 1), ('another', 1), ('the', 2), ('much-quoted', 1), ('not', 1), ('shows', 1), ('friend', 1), ('lady', 1), ('a', 1), ('madame', 1), ('room', 1), ('before', 1), (',', 3), ('dog', 1), ('in', 1), ('down', 1), ('managed', 1), ('did', 1), ('french', 1), ('little', 1), ('rolland', 1), ('!', 1), ('exquisite', 1), ('harp', 1), ('pet', 1), ('ah', 1), ('liberty', 1), ('she', 1), ('and', 1), ('of', 1), ('hauer', 1), ('lafayette', 1), ('who', 1), ('wordsworth', 1)]
+
+2-
+Iteration = 1 training score (micro, macro) =  (0.75534114403859398, 0.61447952443604403)
+Iteration = 2 training score (micro, macro) =  (0.75671950379048936, 0.64796512378051274)
+Iteration = 3 training score (micro, macro) =  (0.8552722260509994, 0.75388334762014086)
+Iteration = 4 training score (micro, macro) =  (0.87043418332184697, 0.81814650085722862)
+Iteration = 5 training score (micro, macro) =  (0.92453480358373541, 0.89152185735625433)
+Iteration = 6 training score (micro, macro) =  (0.95623707787732593, 0.93998313727854488)
+Iteration = 7 training score (micro, macro) =  (0.97622329427980703, 0.96299503394220609)
+Iteration = 8 training score (micro, macro) =  (0.97139903514817372, 0.95587696962690716)
+Iteration = 9 training score (micro, macro) =  (0.96416264645072369, 0.94403332591098066)
+Iteration = 10 training score (micro, macro) =  (0.9734665747760165, 0.96190493773232311)
+Iteration = 11 training score (micro, macro) =  (0.9600275671950379, 0.937838967745662)
+Iteration = 12 training score (micro, macro) =  (0.98931771192281182, 0.98355941344025466)
+Iteration = 13 training score (micro, macro) =  (0.96898690558235701, 0.95057792398796703)
+Iteration = 14 training score (micro, macro) =  (0.99345279117849761, 0.99121435096134203)
+Iteration = 15 training score (micro, macro) =  (0.98966230186078563, 0.98504890318751748)
+Iteration = 16 training score (micro, macro) =  (0.99310820124052379, 0.98884843687660229)
+Iteration = 17 training score (micro, macro) =  (0.95968297725706408, 0.93639447386558627)
+Iteration = 18 training score (micro, macro) =  (0.97174362508614753, 0.96096885549465494)
+Iteration = 19 training score (micro, macro) =  (0.99448656099241906, 0.99165635931702656)
+Iteration = 20 training score (micro, macro) =  (0.9979324603721571, 0.9964792603006899)
+
 3- classifier f-measures on the test set:
-micro averaged = 
-macro averaged = 
-4- 
+micro averaged = 0.8315
+macro averaged = 0.7357
+
+4-
+random shuffling: since this is a online update, random shuffling would help generalize.
+learning rate: from the lecture slides, we set the learning rate to 1. but we also tried
+other learning rates with no significant improvement.
+number of iterations: we used 20 iteration.
+weight averaging: weight averaging should help generalized. But we don't see significant improvement
 ---------------------------------------------------------------------------------
 Part 4)
 A) Feature A:
 
 1- Description
+My new feature is part of speech which use nltk.pos_tag() function to
+find all POS in a window centered at the target.
 
 2- naive-bayes f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged = 0.8523
+macro averaged = 0.7737
 
 3- perceptron f-measures on the test set:
-micro averaged = 
-macro averaged = 
-
+micro averaged = 0.8170
+macro averaged = 0.7102
 
 4- Conclusions:
+Above scores are obtained from concatenating my new feature with the traditional
+bag of words feature. The f score does not have significant changes comparing to
+using traditional feature along. I also used my new feature along. The f score
+obtained is similar to the baseline frequency count (around 57%). My new feature
+vocabulary size is only around 40 which may not be enough to separate data. Also
+POS is better used with relative location information. I think the result from using
+new feature alone is complete noise, and the 56% score is mainly due to the prior p(s).
 
 B) Feature B:
 
 1- Description
+New feature B is the part-of-speech of previous word before the target. We try to see if
+POS at specific location will help.
 
 2- naive-bayes f-measures on the test set:
-micro averaged = 
-macro averaged = 
+micro averaged = 0.8587
+macro averaged = 0.7809
 
 3- perceptron f-measures on the test set:
-micro averaged = 
-macro averaged = 
-
+micro averaged = 0.8299
+macro averaged = 0.7364
 
 4- Conclusions:
-
-
+After adding feature B, the accuracy of both classifiers are slightly improved
+(compared to adding feature A only). This indicates that position of a word
+(which bag-of-words model does not preserve) might actually plays an important role.
