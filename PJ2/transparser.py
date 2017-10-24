@@ -155,6 +155,8 @@ def train(train_data, weights):
             pred_trans = getPredictedTransition(features, weights)
             ## get correct output
             true_trans = getTrueTransition(stack, buff, dependents_of_word)
+            if true_trans == -1
+                break
             transition.append(true_trans)
             ## after
             if quiet == 0:
@@ -195,7 +197,7 @@ def testOracleParser(train_data, quiet):
         stack = ['0'] # root index
         transition = [] # empty
         true_trans = 0
-        while (buff != [] or stack != ['0']) and true_trans != -1: # if buff is not empty and stack has other values than root
+        while (buff != [] or stack != ['0']): # if buff is not empty and stack has other values than root
             ## before
             if quiet == 0:
                 print 'Before: '
@@ -204,6 +206,9 @@ def testOracleParser(train_data, quiet):
                 print 'Transition:', transition
             ## get correct output
             true_trans = getTrueTransition(stack, buff, dependents_of_word, quiet)
+            if true_trans == -1: # non-projective tree
+                print 'non-projective examples', train_data.index((sentence, dependents_of_word))
+                break
             transition.append(true_trans)
             ## after
             if quiet == 0:
@@ -212,8 +217,7 @@ def testOracleParser(train_data, quiet):
                 print 'Stack:', stack
                 print 'Transition:', transition
                 raw_input('>>>stop here<<<\n')
-            if true_trans == -1:
-                print 'non-projective examples', train_data.index((sentence, dependents_of_word))
+
 
 
 
