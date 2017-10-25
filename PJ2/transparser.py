@@ -1,4 +1,5 @@
 import depeval as d
+import pprint as pp
 
 def readDataset(file_name):
     data = []
@@ -63,7 +64,7 @@ def getFeatures(stack, buff, sentence):
     else:
         stack_word_idx = int(stack[-1]) - 1 # -1 because word_index starts from 1
         stack_top_word = sentence[stack_word_idx][1]
-        stack_top_pos = sentence[stack_word_idx][4]
+        stack_top_pos = sentence[stack_word_idx][3]
     # corner cases, buffer is empty
     if buff == []:
         buff_head_word = 'EMPTY'
@@ -71,7 +72,7 @@ def getFeatures(stack, buff, sentence):
     else:
         buff_word_idx = int(buff[0]) - 1 # -1 because word_index starts from 1
         buff_head_word = sentence[buff_word_idx][1]
-        buff_head_pos = sentence[buff_word_idx][4]
+        buff_head_pos = sentence[buff_word_idx][3]
     word_pair = (stack_top_word, buff_head_word)
     pos_pair = (stack_top_pos, buff_head_pos)
     features = [stack_top_word, buff_head_word, stack_top_pos, buff_head_pos,
@@ -126,8 +127,9 @@ def updateWeights(m, weights, pred_trans, true_trans, features):
     for f in features:
         weights[pred_trans][f] = weights[pred_trans].get(f, 0) - 1
         weights[true_trans][f] = weights[true_trans].get(f, 0) + 1
-        m[pred_trans][f] = m[pred_trans].get(f, 0) + weights[pred_trans][f]
-        m[true_trans][f] = m[true_trans].get(f, 0) + weights[true_trans][f]
+    for i in range(len(weights)):
+        for f in weights[i]:
+            m[i][f] = m[i].get(f, 0) + weights[i][f]
     return (m, weights)
 
 def train(train_data, weights):
@@ -177,12 +179,11 @@ def train(train_data, weights):
                 (m, weights) = updateWeights(m, weights, pred_trans, true_trans, features)
                 t += 1
     # recover weights after one iteration
-    '''
     print t
-    for i in range(len(weights)):
-        for feat in weights[i]:
+    weights = [dict(), dict(), dict()]
+    for i in range(len(m)):
+        for feat in m[i]:
             weights[i][feat] = m[i][feat] / t
-    '''
     return weights
 
 
@@ -210,7 +211,6 @@ def test(test_data, weights, output_file_name):
             features = getFeatures(stack, buff, sentence)
             ## get predicted output
             pred_trans = getPredictedTransition(features, weights)
-
             ## go to next state
             if pred_trans == 0 and len(stack) >= 2: # leftArc
                 new_head[stack[-2]] = stack[-1]
@@ -308,14 +308,13 @@ if __name__ == "__main__":
     weight_shift = dict()
     weights = [weight_leftArc, weight_rightArc, weight_shift]
     # train the model
-    for iter in range(1):
+    for iter in range(10):
         print 'iteration =', iter
         train_data = readDataset('en.tr100')
         weights = train(train_data, weights)
-
-    # test the model
-    test(dev_data, weights, output_file_name)
-    d.eval(ref_file_name, output_file_name)
+        # test the model
+        test(dev_data, weights, output_file_name)
+        d.eval(ref_file_name, output_file_name)
 
 
     # testOracleParser(train_data, quiet)
