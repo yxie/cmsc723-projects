@@ -1,6 +1,7 @@
 import depeval as d
 import pprint as pp
 
+
 def readDataset(file_name):
     data = []
     sentence = []
@@ -81,12 +82,15 @@ def getFeatures(stack, buff, sentence):
     # raw_input()
     return features
 
-def getPredictedTransition(features, weights):
+def getPredictedTransition(features, weights, valid_trans):
     # compute scores
     scores = [0] * len(weights)
     for i, weight in enumerate(weights):
-        for f in features:
-            scores[i] += weight.get(f, 0)
+        if i in valid_trans:
+            for f in features:
+                scores[i] += weight.get(f, 0)
+        else:
+            scores[i] = -1000000000
     # return index with max score
     return scores.index(max(scores))
 
@@ -161,7 +165,8 @@ def train(train_data, weights):
             ## get features
             features = getFeatures(stack, buff, sentence)
             ## get predicted output
-            pred_trans = getPredictedTransition(features, weights)
+            valid_trans = getValidTransitions(stack, buff)
+            pred_trans = getPredictedTransition(features, weights, valid_trans)
             ## get correct output
             true_trans = getTrueTransition(stack, buff, dependents_of_word)
             if true_trans == -1:
@@ -197,6 +202,15 @@ def logPrediction(sentence, new_head, logResults):
     logResults.append('\n')
     return logResults
 
+def getValidTransitions(stack, buff):
+    valid_trans = []
+    if len(stack) >= 2:
+        valid_trans.append(0)
+        valid_trans.append(1)
+    if len(buff) > 0:
+        valid_trans.append(2)
+    return valid_trans
+
 def test(test_data, weights, output_file_name):
     logResults = []
     for (sentence, dependents_of_word)  in test_data:
@@ -209,8 +223,10 @@ def test(test_data, weights, output_file_name):
             ## create training data and learn
             ## get features
             features = getFeatures(stack, buff, sentence)
+            ## get valid transitions
+            valid_trans = getValidTransitions(stack, buff)
             ## get predicted output
-            pred_trans = getPredictedTransition(features, weights)
+            pred_trans = getPredictedTransition(features, weights, valid_trans)
             ## go to next state
             if pred_trans == 0 and len(stack) >= 2: # leftArc
                 new_head[stack[-2]] = stack[-1]
@@ -308,7 +324,7 @@ if __name__ == "__main__":
     weight_shift = dict()
     weights = [weight_leftArc, weight_rightArc, weight_shift]
     # train the model
-    for iter in range(10):
+    for iter in range(20):
         print 'iteration =', iter
         train_data = readDataset('en.tr100')
         weights = train(train_data, weights)
