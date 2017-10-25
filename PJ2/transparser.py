@@ -1,26 +1,33 @@
-def readDataset(subset):
+import depeval as d
+
+def readDataset(file_name):
     data = []
     sentence = []
     dependents_of_word = dict()
-    if subset in ['tr', 'tr100', 'dev', 'tst']:
-        with open('en.' + subset) as lines:
-            for line in lines:
-                if line == '\n':
-                    data.append((sentence, dependents_of_word))
-                    sentence = []
-                    dependents_of_word = dict()
+
+    with open(file_name) as lines:
+        for line in lines:
+            if line == '\n':
+                data.append((sentence, dependents_of_word))
+                sentence = []
+                dependents_of_word = dict()
+            else:
+                word_fields = line.split('\t')
+                sentence.append(word_fields)
+                head = word_fields[6]
+                dependent = word_fields[0]
+                if head in dependents_of_word:
+                    dependents_of_word[head].append(dependent)
                 else:
-                    word_fields = line.split('\t')
-                    sentence.append(word_fields)
-                    head = word_fields[6]
-                    dependent = word_fields[0]
-                    if head in dependents_of_word:
-                        dependents_of_word[head].append(dependent)
-                    else:
-                        dependents_of_word[head] = [dependent]
-        return data
-    else:
-        print '>>>> invalid input !!! <<<<<'
+                    dependents_of_word[head] = [dependent]
+    return data
+
+
+def writePredictions(logResults, file_name):
+    with open(file_name, 'w') as outh:
+        for line in logResults:
+            outh.write(line)
+
 
 def leftArc(stack, dependents_of_word):
     assert len(stack) >= 2 and stack[-2] != 0
@@ -119,12 +126,12 @@ def updateWeights(m, weights, pred_trans, true_trans, features):
     for f in features:
         weights[pred_trans][f] = weights[pred_trans].get(f, 0) - 1
         weights[true_trans][f] = weights[true_trans].get(f, 0) + 1
-        m[pred_trans][f] += weights[pred_trans][f]
-        m[true_trans][f] += weights[true_trans][f]
+        m[pred_trans][f] = m[pred_trans].get(f, 0) + weights[pred_trans][f]
+        m[true_trans][f] = m[true_trans].get(f, 0) + weights[true_trans][f]
     return (m, weights)
 
 def train(train_data, weights):
-    m = weights
+    m = [dict(), dict(), dict()]
     t = 0
     # process one iteration
     for (sentence, dependents_of_word)  in train_data:
@@ -155,7 +162,7 @@ def train(train_data, weights):
             pred_trans = getPredictedTransition(features, weights)
             ## get correct output
             true_trans = getTrueTransition(stack, buff, dependents_of_word)
-            if true_trans == -1
+            if true_trans == -1:
                 break
             transition.append(true_trans)
             ## after
@@ -170,10 +177,57 @@ def train(train_data, weights):
                 (m, weights) = updateWeights(m, weights, pred_trans, true_trans, features)
                 t += 1
     # recover weights after one iteration
+    '''
+    print t
     for i in range(len(weights)):
-        for feat in weight:
+        for feat in weights[i]:
             weights[i][feat] = m[i][feat] / t
+    '''
     return weights
+
+
+
+
+def logPrediction(sentence, new_head, logResults):
+    for word in sentence:
+        head = new_head.get(word[0], '0') # if new head is not found, default 0
+        word[6] = head
+        logResults.append('\t'.join(word))
+    logResults.append('\n')
+    return logResults
+
+def test(test_data, weights, output_file_name):
+    logResults = []
+    for (sentence, dependents_of_word)  in test_data:
+        # process one sentence
+        buff = [word[0] for word in sentence] # all word indices
+        stack = ['0'] # root index
+        transition = [] # empty
+        new_head = dict()
+        while buff != [] or stack != ['0']: # if buff is not empty and stack has other values than root
+            ## create training data and learn
+            ## get features
+            features = getFeatures(stack, buff, sentence)
+            ## get predicted output
+            pred_trans = getPredictedTransition(features, weights)
+
+            ## go to next state
+            if pred_trans == 0 and len(stack) >= 2: # leftArc
+                new_head[stack[-2]] = stack[-1]
+                del stack[-2]
+            elif pred_trans == 1 and len(stack) >= 2: # rightArc
+                new_head[stack[-1]] = stack[-2]
+                del stack[-1]
+            elif pred_trans == 2 and len(buff) > 0: # shift
+                stack.append(buff[0])
+                del buff[0]
+            else:
+                break
+        # log prediction results
+        logResults = logPrediction(sentence, new_head, logResults)
+    writePredictions(logResults, output_file_name)
+
+
 
 
 def testOracleParser(train_data, quiet):
@@ -221,13 +275,17 @@ def testOracleParser(train_data, quiet):
 
 
 
+
 if __name__ == "__main__":
     # print something for debugging
     quiet = 1
 
     # read dataset => train_data, dev_data, test_data
     # data[sentence_id][word_id][field_id]
-    train_data = readDataset('tr100')
+    train_data = readDataset('en.tr100')
+    dev_data = readDataset('en.dev')
+    ref_file_name = 'en.dev'
+    output_file_name = 'en.dev.out'
 
     # for each sentence
     #   update configuration
@@ -244,17 +302,20 @@ if __name__ == "__main__":
     #   pair of coarse POS (field 4) at top of stack and head of buffer
 
     # define leftArc = 0, rightArc = 1, shift = 2
-    '''
+
     weight_leftArc = dict()
     weight_rightArc = dict()
     weight_shift = dict()
     weights = [weight_leftArc, weight_rightArc, weight_shift]
+    # train the model
     for iter in range(1):
         print 'iteration =', iter
-        # train the model
+        train_data = readDataset('en.tr100')
         weights = train(train_data, weights)
-        # test the model
-        test(dev_data, weights)
-    '''
 
-    testOracleParser(train_data, quiet)
+    # test the model
+    test(dev_data, weights, output_file_name)
+    d.eval(ref_file_name, output_file_name)
+
+
+    # testOracleParser(train_data, quiet)
