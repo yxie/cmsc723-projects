@@ -85,10 +85,10 @@ def getFeatures(stack, buff, sentence):
 def getPredictedTransition(features, weights, valid_trans):
     # compute scores
     scores = [0] * len(weights)
-    for i, weight in enumerate(weights):
+    for i in range(len(weights)):
         if i in valid_trans:
-            for f in features:
-                scores[i] += weight.get(f, 0)
+            for f_id, f_val in enumerate(features):
+                scores[i] += weights[i][f_id].get(f_val, 0)
         else:
             scores[i] = -1000000000
     # return index with max score
@@ -127,17 +127,30 @@ def getTrueTransition(stack, buff, dependents_of_word, quiet=1):
     # assert true_trans != -1
     return true_trans
 
+def initializeWeights():
+    n = 6 + 1 # 6 features, +1 bias
+    # weight_leftArc = [dict()] * feature_size doesnt work !!
+    weight_leftArc =  [dict() for x in range(n)]
+    weight_rightArc = [dict() for x in range(n)]
+    weight_shift = [dict() for x in range(n)]
+    weights = [weight_leftArc, weight_rightArc, weight_shift]
+    return weights
+
 def updateWeights(m, weights, pred_trans, true_trans, features):
-    for f in features:
-        weights[pred_trans][f] = weights[pred_trans].get(f, 0) - 1
-        weights[true_trans][f] = weights[true_trans].get(f, 0) + 1
+    for f_id, f_val in enumerate(features):
+        weights[pred_trans][f_id][f_val] = weights[pred_trans][f_id].get(f_val, 0) - 1
+        weights[true_trans][f_id][f_val] = weights[true_trans][f_id].get(f_val, 0) + 1
+
+    '''
     for i in range(len(weights)):
-        for f in weights[i]:
-            m[i][f] = m[i].get(f, 0) + weights[i][f]
+        for f_id in range(len(weights[i])):
+            for f_val in weights[i][f_id]:
+                m[i][f_id][f_val] = m[i][f_id].get(f_val, 0) + weights[i][f_id][f_val]
+    '''
     return (m, weights)
 
 def train(train_data, weights):
-    m = [dict(), dict(), dict()]
+    m = initializeWeights()
     t = 0
     # process one iteration
     for (sentence, dependents_of_word)  in train_data:
@@ -169,6 +182,7 @@ def train(train_data, weights):
             pred_trans = getPredictedTransition(features, weights, valid_trans)
             ## get correct output
             true_trans = getTrueTransition(stack, buff, dependents_of_word)
+            # print 'pred=', pred_trans, 'true=', true_trans
             if true_trans == -1:
                 break
             transition.append(true_trans)
@@ -185,10 +199,13 @@ def train(train_data, weights):
                 t += 1
     # recover weights after one iteration
     print t
-    weights = [dict(), dict(), dict()]
+    '''
     for i in range(len(m)):
-        for feat in m[i]:
-            weights[i][feat] = m[i][feat] / t
+        for f_id in range(len(m[i])):
+            for f_val in m[i][f_id]:
+                m[i][f_id][f_val] = m[i][f_id][f_val] / t
+    return m
+    '''
     return weights
 
 
@@ -242,9 +259,6 @@ def test(test_data, weights, output_file_name):
         # log prediction results
         logResults = logPrediction(sentence, new_head, logResults)
     writePredictions(logResults, output_file_name)
-
-
-
 
 def testOracleParser(train_data, quiet):
     i = 0
@@ -319,12 +333,10 @@ if __name__ == "__main__":
 
     # define leftArc = 0, rightArc = 1, shift = 2
 
-    weight_leftArc = dict()
-    weight_rightArc = dict()
-    weight_shift = dict()
-    weights = [weight_leftArc, weight_rightArc, weight_shift]
+    weights = initializeWeights()
+
     # train the model
-    for iter in range(20):
+    for iter in range(10):
         print 'iteration =', iter
         train_data = readDataset('en.tr100')
         weights = train(train_data, weights)
