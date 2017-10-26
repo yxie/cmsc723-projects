@@ -66,6 +66,17 @@ def getFeatures(stack, buff, sentence):
         stack_word_idx = int(stack[-1]) - 1 # -1 because word_index starts from 1
         stack_top_word = sentence[stack_word_idx][1]
         stack_top_pos = sentence[stack_word_idx][3]
+    if len(stack) >= 2:
+        if stack[-2] == '0':
+            stack_second_word = 'ROOT'
+            stack_second_pos = 'ROOT_POS'
+        else:
+            stack_word_idx = int(stack[-2]) - 1 # -1 because word_index starts from 1
+            stack_second_word = sentence[stack_word_idx][1]
+            stack_second_pos = sentence[stack_word_idx][3]
+    else:
+        stack_second_word = 'EMPTY'
+        stack_second_pos = 'EMPTY_POS'
     # corner cases, buffer is empty
     if buff == []:
         buff_head_word = 'EMPTY'
@@ -76,7 +87,7 @@ def getFeatures(stack, buff, sentence):
         buff_head_pos = sentence[buff_word_idx][3]
     word_pair = (stack_top_word, buff_head_word)
     pos_pair = (stack_top_pos, buff_head_pos)
-    features = [stack_top_word, buff_head_word, stack_top_pos, buff_head_pos,
+    features = [stack_top_word, stack_second_word, buff_head_word, stack_top_pos, stack_second_pos, buff_head_pos,
                 word_pair, pos_pair, 'bias']
     # print features
     # raw_input()
@@ -128,7 +139,7 @@ def getTrueTransition(stack, buff, dependents_of_word, quiet=1):
     return true_trans
 
 def initializeWeights():
-    n = 6 + 1 # 6 features, +1 bias
+    n = 8 + 1 # 6 features, +1 bias
     # weight_leftArc = [dict()] * feature_size doesnt work !!
     weight_leftArc =  [dict() for x in range(n)]
     weight_rightArc = [dict() for x in range(n)]
@@ -207,9 +218,6 @@ def train(train_data, weights):
     return m
     '''
     return weights
-
-
-
 
 def logPrediction(sentence, new_head, logResults):
     for word in sentence:
