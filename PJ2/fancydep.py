@@ -61,22 +61,26 @@ def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
     sw = ['EMPTY'] * depth # word
     sp = ['EMPTY_POS'] * depth # tag
     sd = ['0'] * depth # distance
-    s0h = '-1'
-    s0r = '-1'
-    s0l = '-1'
+    s0h = '-1' # head of s0
+    s0r = '-1' # right most dependent of s0
+    s0l = '-1' # left most
+    s0vr = '0' # right valency
+    s0vl = '0' # left valency
     for i, pos in enumerate(list(reversed(stack))):
         if i == depth:
             break
         if i == 0:
             s0h = head_of.get(pos, '-1')
             sdep = dependents_of_word.get(pos, [])
-            if sdep == []:
-                s0l = '-1'
-                s0r = '-1'
-            else:
-                sdep = [int(s) for s in sdep]
-                s0l = str(min(sdep))
-                s0r = str(max(sdep))
+            sdep = [int(n) for n in sdep]
+            sdepr = [j1 for j1 in sdep if j1 > int(pos)]
+            sdepl = [j1 for j1 in sdep if j1 < int(pos)]
+            if sdepl != []:
+                s0l = str(min(sdepl))
+                s0vl = str(len(sdepl))
+            if sdepr != []:
+                s0r = str(max(sdepr))
+                s0vr = str(len(sdepr))
         if pos == '0':
             sw[i] = 'ROOT'
             sp[i] = 'ROOT_POS'
@@ -92,19 +96,23 @@ def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
     n0h = '-1'
     n0r = '-1'
     n0l = '-1'
+    n0vr = '0'
+    n0vl = '0'
     for i, pos in enumerate(buff):
         if i == depth:
             break
         if i == 0:
             n0h = head_of.get(pos, '-1')
             ndep = dependents_of_word.get(pos, [])
-            if ndep == []:
-                n0l = '-1'
-                n0r = '-1'
-            else:
-                ndep = [int(n) for n in ndep]
-                n0l = str(min(ndep))
-                n0r = str(max(ndep))
+            ndep = [int(n) for n in ndep]
+            ndepr = [j1 for j1 in ndep if j1 > int(pos)]
+            ndepl = [j1 for j1 in ndep if j1 < int(pos)]
+            if ndepl != []:
+                n0l = str(min(ndepl))
+                n0vl = str(len(ndepl))
+            if ndepr != []:
+                n0r = str(max(ndepr))
+                n0vr = str(len(ndepr))
         if pos == '0':
             nw[i] = 'ROOT'
             np[i] = 'ROOT_POS'
@@ -119,18 +127,25 @@ def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
     n0wp = (nw[0], np[0])
     s1wp = (sw[1], sp[1])
     n1wp = (nw[1], np[1])
-    single = sw[0:2] + sp[0:2] + nw[0:2] + np[0:2] + [s0wp,s1wp,n0wp,n1wp]
+    single = sw[0:2] + sp[0:2] + nw[0:2] + np[0:2] # 8
+#    + [s0wp,s1wp,n0wp,n1wp] # 12
 
     # word pair basic 8
     s0wn0w = (sw[0], nw[0])
     s0pn0p = (sp[0], np[0])
+    s0ws1w = (sw[0], sw[1])
+    n0wn1w = (nw[0], nw[1])
+    s0ps1p = (sp[0], sp[1])
+    n0pn1p = (np[0], np[1])
+    
     n0pn1p = (np[0], np[1])
     s0wpn0wp = s0wp + n0wp
     s0wpn0w = s0wp + (nw[0],)
     s0wn0wp = (sw[0],) + n0wp
     s0wpn0p = s0wp + (np[0],)
     s0pn0wp = (sp[0],) + n0wp
-    pair = [s0wn0w,s0pn0p,n0pn1p,s0wpn0wp,s0wpn0w,s0wn0wp,s0wpn0p,s0pn0wp]
+    pair = [s0wn0w,s0pn0p,s0ws1w,n0wn1w,s0ps1p,n0pn1p] # 6
+#    pair = [s0wn0w,s0pn0p,n0pn1p,s0wpn0wp,s0wpn0w,s0wn0wp,s0wpn0p,s0pn0wp]
     
     # three words 6
     n012p = tuple(np[0:3])
@@ -143,17 +158,26 @@ def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
     s0ps0lpn0p = (sp[0], s0lp, np[0])
     s0ps0rpn0p = (sp[0], s0rp, np[0])
     s0pn0pn0lp = (sp[0], np[0], n0lp)
-    s1wb1w_d = (sw[0] , nw[0], str( int(sd[0]) - int(nd[0]) ) )
     triplet = [n012p,s0n01p,s0hps0pn0p,s0ps0lpn0p,s0ps0rpn0p,s0pn0pn0lp]
-    basic_features = single + pair + [s1wb1w_d] + ['bias']
+        
+    s0wd = (sw[0], sd[0])
+    s1wd = (sw[1], sd[1])
+    n0wd = (nw[0], nd[0])
+    n1wd = (nw[1], nd[1])
+    s0wn0w_d = (sw[0] , nw[0], str( int(sd[0]) - int(nd[0]) ) )
+    s0pn0p_d = (sp[0] , np[0], str( int(sd[0]) - int(nd[0]) ) )
+    dist = [s0wd, s1wd, n0wd, n1wd, s0wn0w_d, s0pn0p_d] # 6
     
-#    s1wd = (sw[0], sd[0])
-#    s2wd = (sw[1], sd[1])
-#    b1wd = (bw[0], bd[0])
-#    b2wd = (bw[1], bd[1])
-#    single_adv = [s1wd, s2wd, b1wd, b2wd]
+    s0wvr = (sw[0], s0vr)
+    s0pvr = (sp[0], s0vr)
+    s0wvl = (sw[0], s0vl)
+    s0pvl = (sp[0], s0vl)
+    n0wvl = (nw[0], n0vl)
+    n0pvl = (np[0], n0vl)
+    valency = [s0wvr,s0pvr,s0wvl,s0pvl,n0wvl,n0pvl] # 6
     
-    return basic_features
+    features = single + pair + dist + valency + triplet +  ['bias']
+    return features
 
 # 0: leftA, 1: rightA, 2: shift 
 def getValidTransitions(stack, buff):
@@ -375,7 +399,7 @@ def getProp(sentence, word_idx, field):
 
 if __name__ == "__main__":
     
-    train_file_name = 'en.tr100'
+    train_file_name = 'en.tr'
     dev_file_name = 'en.dev'
     test_file_name = 'en.tst'
     dev_output_file_name = 'en.dev.out'
@@ -390,9 +414,9 @@ if __name__ == "__main__":
 #    testOracleParser(train_data,0)
 #    testAllNonProj(train_data)
     
-    nFeatures = 21
+    nFeatures = 32
     weights = []
-    for iter in range(10):
+    for iter in range(5):
         print 'iteration =', iter
         train_data = readDataset(train_file_name)
         weights = train(train_data, weights, nFeatures)
