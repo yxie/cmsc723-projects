@@ -143,9 +143,9 @@ def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
     s0ps0lpn0p = (sp[0], s0lp, np[0])
     s0ps0rpn0p = (sp[0], s0rp, np[0])
     s0pn0pn0lp = (sp[0], np[0], n0lp)
-#    s1wb1w_d = (sw[0] , bw[0], str( int(sd[0]) - int(bd[0]) ) )
+    s1wb1w_d = (sw[0] , nw[0], str( int(sd[0]) - int(nd[0]) ) )
     triplet = [n012p,s0n01p,s0hps0pn0p,s0ps0lpn0p,s0ps0rpn0p,s0pn0pn0lp]
-    basic_features = single + pair + ['bias']
+    basic_features = single + pair + [s1wb1w_d] + ['bias']
     
 #    s1wd = (sw[0], sd[0])
 #    s2wd = (sw[1], sd[1])
@@ -390,10 +390,11 @@ if __name__ == "__main__":
 #    testOracleParser(train_data,0)
 #    testAllNonProj(train_data)
     
-    nFeatures = 20
+    nFeatures = 21
     weights = []
-    for iter in range(2):
+    for iter in range(10):
         print 'iteration =', iter
+        train_data = readDataset(train_file_name)
         weights = train(train_data, weights, nFeatures)
         test(dev_data, weights, test_output_file_name)
         d.eval(dev_file_name, test_output_file_name)
