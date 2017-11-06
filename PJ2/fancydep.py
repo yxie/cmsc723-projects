@@ -38,11 +38,14 @@ def train(train_data, weights, nFeatures):
     if weights == []:
         weights = initializeWeights(nFeatures)
     for (sentence, dependents_of_word)  in train_data:
+        head_of = getHeadOf(dependents_of_word)
+        dow = dependents_of_word.copy()
         buff = [word[0] for word in sentence]
         stack = ['0'] # root index
         transition = [] # empty
         while buff != [] or stack != ['0']:
-            features = getFeatures(stack, buff, sentence)
+            features = getFeatures(stack, buff, sentence,
+                                   dow, head_of)
             valid_trans = getValidTransitions(stack, buff)
             pred_trans = getPredictedTransition(features, weights, valid_trans)
             true_trans = getTrueTransition(stack, buff, dependents_of_word)
@@ -53,63 +56,104 @@ def train(train_data, weights, nFeatures):
                 weights = updateWeights(weights, pred_trans, true_trans, features)
     return weights
 
-def getFeatures(stack, buff, sentence):
-    depth = 3
+def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
+    depth = 2
     sw = ['EMPTY'] * depth # word
-    st = ['EMPTY_POS'] * depth # tag
+    sp = ['EMPTY_POS'] * depth # tag
     sd = ['0'] * depth # distance
+    s0h = '-1'
+    s0r = '-1'
+    s0l = '-1'
     for i, pos in enumerate(list(reversed(stack))):
         if i == depth:
             break
+        if i == 0:
+            s0h = head_of.get(pos, '-1')
+            sdep = dependents_of_word.get(pos, [])
+            if sdep == []:
+                s0l = '-1'
+                s0r = '-1'
+            else:
+                sdep = [int(s) for s in sdep]
+                s0l = str(min(sdep))
+                s0r = str(max(sdep))
         if pos == '0':
             sw[i] = 'ROOT'
-            st[i] = 'ROOT_POS'
+            sp[i] = 'ROOT_POS'
         else:
             word_idx = int(pos) - 1
             sw[i] = sentence[word_idx][1]
-            st[i] = sentence[word_idx][3]
+            sp[i] = sentence[word_idx][3]
             sd[i] = sentence[word_idx][0]
 
-    bw = ['EMPTY'] * depth
-    bt = ['EMPTY_POS'] * depth
-    bd = ['0'] * depth
+    nw = ['EMPTY'] * depth
+    np = ['EMPTY_POS'] * depth
+    nd = ['0'] * depth
+    n0h = '-1'
+    n0r = '-1'
+    n0l = '-1'
     for i, pos in enumerate(buff):
         if i == depth:
             break
+        if i == 0:
+            n0h = head_of.get(pos, '-1')
+            ndep = dependents_of_word.get(pos, [])
+            if ndep == []:
+                n0l = '-1'
+                n0r = '-1'
+            else:
+                ndep = [int(n) for n in ndep]
+                n0l = str(min(ndep))
+                n0r = str(max(ndep))
         if pos == '0':
-            bw[i] = 'ROOT'
-            bt[i] = 'ROOT_POS'
+            nw[i] = 'ROOT'
+            np[i] = 'ROOT_POS'
         else:
             word_idx = int(pos) - 1
-            bw[i] = sentence[word_idx][1]
-            bt[i] = sentence[word_idx][3]
-            bd[i] = sentence[word_idx][0]
+            nw[i] = sentence[word_idx][1]
+            np[i] = sentence[word_idx][3]
+            nd[i] = sentence[word_idx][0]
     
-    # single 8
-    s1wd = (sw[0], sd[0])
-    s2wd = (sw[1], sd[1])
-    b1wd = (bw[0], bd[0])
-    b2wd = (bw[1], bd[1])
-    single = sw[0:2] + st[0:2] + bw[0:2] + bt[0:2]
+    # single world basic 12
+    s0wp = (sw[0], sp[0])
+    n0wp = (nw[0], np[0])
+    s1wp = (sw[1], sp[1])
+    n1wp = (nw[1], np[1])
+    single = sw[0:2] + sp[0:2] + nw[0:2] + np[0:2] + [s0wp,s1wp,n0wp,n1wp]
 
-    # pair 6
-    s1wb1w = (sw[0], bw[0])
-    s1tb1t = (st[0], bt[0])
-    s1ws2w = (sw[0], sw[1])
-    b1wb2w = (bw[0], bw[1])
-    s1ts2t = (st[0], st[1])
-    b1tb2t = (bt[0], bt[1])
-    pair = [s1wb1w,s1tb1t,s1ws2w,b1wb2w,s1ts2t,b1tb2t]
+    # word pair basic 8
+    s0wn0w = (sw[0], nw[0])
+    s0pn0p = (sp[0], np[0])
+    n0pn1p = (np[0], np[1])
+    s0wpn0wp = s0wp + n0wp
+    s0wpn0w = s0wp + (nw[0],)
+    s0wn0wp = (sw[0],) + n0wp
+    s0wpn0p = s0wp + (np[0],)
+    s0pn0wp = (sp[0],) + n0wp
+    pair = [s0wn0w,s0pn0p,n0pn1p,s0wpn0wp,s0wpn0w,s0wn0wp,s0wpn0p,s0pn0wp]
     
-    # three 4
-    s123w = tuple(sw[0:3])
-    s123t = tuple(st[0:3])
-    b123w = tuple(bw[0:3])
-    b123t = tuple(bt[0:3])
-    three = [s123w, s123t, b123w, b123t]
+    # three words 6
+    n012p = tuple(np[0:3])
+    s0n01p = tuple(sp[0:1] + np[0:2])
+    s0hp = getProp(sentence, s0h, 3)
+    s0lp = getProp(sentence, s0l, 3)
+    s0rp = getProp(sentence, s0r, 3)
+    n0lp = getProp(sentence, n0l, 3)
+    s0hps0pn0p = (s0hp, sp[0], np[0])
+    s0ps0lpn0p = (sp[0], s0lp, np[0])
+    s0ps0rpn0p = (sp[0], s0rp, np[0])
+    s0pn0pn0lp = (sp[0], np[0], n0lp)
+#    s1wb1w_d = (sw[0] , bw[0], str( int(sd[0]) - int(bd[0]) ) )
+    triplet = [n012p,s0n01p,s0hps0pn0p,s0ps0lpn0p,s0ps0rpn0p,s0pn0pn0lp]
+    basic_features = single + pair + ['bias']
     
-    features = single + pair + three + ['bias']
-    return features
+#    s1wd = (sw[0], sd[0])
+#    s2wd = (sw[1], sd[1])
+#    b1wd = (bw[0], bd[0])
+#    b2wd = (bw[1], bd[1])
+#    single_adv = [s1wd, s2wd, b1wd, b2wd]
+    
+    return basic_features
 
 # 0: leftA, 1: rightA, 2: shift 
 def getValidTransitions(stack, buff):
@@ -249,22 +293,31 @@ def testAllNonProj(train_data):
 
 def test(test_data, weights, output_file_name):
     logResults = []
-    a = 0
-    for (sentence, dependents_of_word)  in test_data:
+    for (sentence, _)  in test_data:
+        dependents_of_word = dict()
         buff = [word[0] for word in sentence] 
         stack = ['0']
         head_of = dict() # key: dependent, val: head
         while buff != [] or stack != ['0']:
-            features = getFeatures(stack, buff, sentence)
+            features = getFeatures(stack, buff, sentence,
+                                   dependents_of_word, head_of)
             valid_trans = getValidTransitions(stack, buff)
             pred_trans = getPredictedTransition(features, weights, valid_trans)
             
             if valid_trans == []:
                 break
             elif pred_trans == 0: # leftArc
+                if buff[0] in dependents_of_word:
+                    dependents_of_word[buff[0]].append(stack[-1])
+                else:
+                    dependents_of_word[buff[0]] = [stack[-1]]
                 head_of[stack[-1]] = buff[0]
                 del stack[-1]
             elif pred_trans == 1: # rightArc
+                if stack[-1] in dependents_of_word:
+                    dependents_of_word[stack[-1]].append(buff[0])
+                else:
+                    dependents_of_word[stack[-1]] = [buff[0]]
                 head_of[buff[0]] = stack[-1]
                 buff[0] = stack[-1]
                 del stack[-1]
@@ -272,7 +325,6 @@ def test(test_data, weights, output_file_name):
                 stack.append(buff[0])
                 del buff[0]
         # log prediction results
-        a = a+1
         logResults = logPrediction(sentence, head_of, logResults)
     writePredictions(logResults, output_file_name)
 
@@ -288,30 +340,62 @@ def writePredictions(logResults, file_name):
     with open(file_name, 'w') as outh:
         for line in logResults:
             outh.write(line)
+            
+def analizeWeights(weights):
+    a = []
+    for trans, weightT in enumerate(weights):
+#        a.append([dict() for x in range(len(weightT))])
+        d = []
+        for f, weightF in enumerate(weightT):
+            v = weightF.values()
+            d.append(max(v) - min(v))
+#            a[trans][f][f] = [max(v), min(v)]
+        a.append(d)
+    return a
+
+def getHeadOf(dependents_of_word):
+    head_of = dict()
+    for head, deps in dependents_of_word.iteritems():
+        for dep in deps:
+            head_of[dep] = head
+    return head_of
+
+def getProp(sentence, word_idx, field):
+    prop = 'NA'
+    if word_idx == '-1':
+        return prop
+    elif word_idx == '0':
+        if field == 1:
+            prop = 'ROOT'
+        elif field == 3:
+            prop = 'ROOT_POS'
+    else:
+        prop = sentence[int(word_idx) - 1][field]
+    return prop
 
 if __name__ == "__main__":
-
-    dev_data = readDataset('en.dev')
-    test_data = readDataset('en.tst')
     
-    train_file_name = 'en.tr'
-    ref_file_name = 'en.dev'
-    ref_output_file_name = 'en.dev.out'
+    train_file_name = 'en.tr100'
+    dev_file_name = 'en.dev'
     test_file_name = 'en.tst'
+    dev_output_file_name = 'en.dev.out'
     test_output_file_name = 'en.tst.fancy.out'
-    
 
-    
+    dev_data = readDataset(dev_file_name)
     train_data = readDataset(train_file_name)
+    
+#    dep = train_data[0][1]
+#    a = getHeadOf(train_data[0][1])
+#    b = getProp(train_data[0][0], '1', 1)
 #    testOracleParser(train_data,0)
 #    testAllNonProj(train_data)
-    nFeatures = 18
+    
+    nFeatures = 20
     weights = []
-    for iter in range(4):
+    for iter in range(2):
         print 'iteration =', iter
-        train_data = readDataset(train_file_name)
         weights = train(train_data, weights, nFeatures)
         test(dev_data, weights, test_output_file_name)
-        d.eval(ref_file_name, test_output_file_name)
+        d.eval(dev_file_name, test_output_file_name)
         
-        
+    aw = analizeWeights(weights)
