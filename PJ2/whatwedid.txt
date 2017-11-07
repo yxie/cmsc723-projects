@@ -1,3 +1,4 @@
+-------- Da's comments-----------------
 First, I will briefly explain some features in our pipeline.
 
 Data parsing:
@@ -13,9 +14,9 @@ Transition-based parser
 We have tried both version of Arc-standard parser. We find that the feature selection is directly related to the accuracy of the parser. With the first version (left, right arc only on stack), the provided features perform poorly (about 30% accuracy). However, when we adjusted the features to include relations between first and second words in stack, we can significantly improve accuracy to about 60%. The second version parser with provided features perform similarly.
 
 New features
-We have extracted/experimented with many different new features as suggested in Zhang's paper, such as distances, valency, properties of head/left most/right most of target words. However, these feature does not work well, and decrease accuracy as we adding more features. We think this is due to one zero loss, as well as, features were designed for arc-eager with beam search. From the paper, auther suggested that the valency and distance would be the most helpful features because they are encoding informations also used in graph parser. Using these new features alone would give me some good result (60%) but when the feature vector gets too big (about 25 - 35), the result can be as low as 5%.
+We have extracted/experimented with many different new features as suggested in Zhang's paper, such as distances, valency, properties of head/left most/right most of target words. However, these feature does not work well, and decrease accuracy as we adding more features. We think this is due to one zero loss, as well as, features were designed for arc-eager with beam search. Some of the basic features suggested in the paper relies on previously parsed information which is not always available and correct during testing. If their corresponding weights are big, an early mistake (even trivial ones) would greatly affect outcome. From the paper, auther suggested that the valency and distance would be the most helpful features because they are encoding informations also used in graph parser. Using these new features alone would give me some good result (60%) but when the feature vector gets too big (about 25 - 35), the result can be as low as 5%.
 To achieve a 70% accuracy, we used a word identity and POS for the first two world on stack and buffer, along with some small set of combinations of pairs and triplets. It seems that we would need some major improvement other than experimenting with features to get a higher accuracy.
 
-
+---------------------------
 
 
