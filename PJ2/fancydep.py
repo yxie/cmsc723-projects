@@ -159,14 +159,28 @@ def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
     s0ps0rpn0p = (sp[0], s0rp, np[0])
     s0pn0pn0lp = (sp[0], np[0], n0lp)
     
+    s01wn0w = tuple(sw[0:2] + nw[0:1])
+    s01pn0p = tuple(sp[0:2] + np[0:1])
+    s0wn01w = tuple(sw[0:1] + nw[0:2])
+    s0pn01p = tuple(sp[0:1] + np[0:2])
+    
     s012w = tuple(sw[0:3])
     s012p = tuple(sp[0:3])
     n012w = tuple(nw[0:3])
     n012t = tuple(np[0:3])
     
-    triplet = [s012w, s012p, n012w, n012t] # 4
+    
+
+    
+    triplet = [s012w, s012p, n012w, n012t, s01wn0w, s01pn0p, s0wn01w, s0pn01p] # 4
+    
+    s01wn01w = tuple(sw[0:2] + nw[0:2])
+    s01pn01p = tuple(sp[0:2] + np[0:2])
+#    four = [s01wn01w, s01pn01p]
 #    triplet = [n012p,s0n01p,s0hps0pn0p,s0ps0lpn0p,s0ps0rpn0p,s0pn0pn0lp]
-        
+    
+    
+    
     s0wd = (sw[0], sd[0])
     s1wd = (sw[1], sd[1])
     n0wd = (nw[0], nd[0])
@@ -183,7 +197,7 @@ def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
     n0pvl = (np[0], n0vl)
     valency = [s0wvr,s0pvr,s0wvl,s0pvl,n0wvl,n0pvl] # 6
     
-    features = single + pair + triplet +  ['bias']
+    features = single + pair + triplet + ['bias']
     #  + dist + valency
     return features
 
@@ -426,7 +440,7 @@ if __name__ == "__main__":
 #    testOracleParser(train_data,0)
 #    testAllNonProj(train_data)
     
-    nFeatures = 18
+    nFeatures = 22
     weights = []
     for iter in range(5):
         print 'iteration =', iter
