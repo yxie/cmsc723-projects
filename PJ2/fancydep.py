@@ -1,5 +1,5 @@
 import depeval as d
-import pprint as pp
+import sys
 
 # data is a list of tuples (sentence, dependency) one per sentence
 # sentence is a list of words and words is a list of word properties
@@ -57,7 +57,7 @@ def train(train_data, weights, nFeatures):
     return weights
 
 def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
-    depth = 2
+    depth = 3
     sw = ['EMPTY'] * depth # word
     sp = ['EMPTY_POS'] * depth # tag
     sd = ['0'] * depth # distance
@@ -158,7 +158,14 @@ def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
     s0ps0lpn0p = (sp[0], s0lp, np[0])
     s0ps0rpn0p = (sp[0], s0rp, np[0])
     s0pn0pn0lp = (sp[0], np[0], n0lp)
-    triplet = [n012p,s0n01p,s0hps0pn0p,s0ps0lpn0p,s0ps0rpn0p,s0pn0pn0lp]
+    
+    s012w = tuple(sw[0:3])
+    s012p = tuple(sp[0:3])
+    n012w = tuple(nw[0:3])
+    n012t = tuple(np[0:3])
+    
+    triplet = [s012w, s012p, n012w, n012t] # 4
+#    triplet = [n012p,s0n01p,s0hps0pn0p,s0ps0lpn0p,s0ps0rpn0p,s0pn0pn0lp]
         
     s0wd = (sw[0], sd[0])
     s1wd = (sw[1], sd[1])
@@ -176,7 +183,8 @@ def getFeatures(stack, buff, sentence, dependents_of_word, head_of):
     n0pvl = (np[0], n0vl)
     valency = [s0wvr,s0pvr,s0wvl,s0pvl,n0wvl,n0pvl] # 6
     
-    features = single + pair + dist + valency + triplet +  ['bias']
+    features = single + pair + triplet +  ['bias']
+    #  + dist + valency
     return features
 
 # 0: leftA, 1: rightA, 2: shift 
@@ -398,14 +406,18 @@ def getProp(sentence, word_idx, field):
     return prop
 
 if __name__ == "__main__":
+#   python fancydep.py en.tr en.tst en.tst.fancy.out
+#    python fancydep.py en.tr en.dev en.tst.fancy.out
     
-    train_file_name = 'en.tr'
-    dev_file_name = 'en.dev'
-    test_file_name = 'en.tst'
-    dev_output_file_name = 'en.dev.out'
-    test_output_file_name = 'en.tst.fancy.out'
+    test_file_name = sys.argv[2]
+    output_file_name = sys.argv[3]
+    train_file_name = sys.argv[1]
+#    dev_file_name = 'en.dev'
+#    test_file_name = 'en.tst'
+#    dev_output_file_name = 'en.dev.out'
+#    test_output_file_name = 'en.tst.fancy.out'
 
-    dev_data = readDataset(dev_file_name)
+    dev_data = readDataset(test_file_name)
     train_data = readDataset(train_file_name)
     
 #    dep = train_data[0][1]
@@ -414,13 +426,13 @@ if __name__ == "__main__":
 #    testOracleParser(train_data,0)
 #    testAllNonProj(train_data)
     
-    nFeatures = 32
+    nFeatures = 18
     weights = []
     for iter in range(5):
         print 'iteration =', iter
         train_data = readDataset(train_file_name)
         weights = train(train_data, weights, nFeatures)
-        test(dev_data, weights, test_output_file_name)
-        d.eval(dev_file_name, test_output_file_name)
+        test(dev_data, weights, output_file_name)
+#        d.eval(test_file_name, output_file_name)
         
     aw = analizeWeights(weights)

@@ -1,6 +1,5 @@
 import depeval as d
-import pprint as pp
-
+import sys
 
 def readDataset(file_name):
     data = []
@@ -318,26 +317,14 @@ if __name__ == "__main__":
     # print something for debugging
     quiet = 1
 
+    train_file_name = sys.argv[1]
+    test_file_name = sys.argv[2]
+    output_file_name = sys.argv[3]
+    # transparser.py en.tr100 en.tst en.tst.out
     # read dataset => train_data, dev_data, test_data
     # data[sentence_id][word_id][field_id]
-    train_data = readDataset('en.tr100')
-    dev_data = readDataset('en.dev')
-    ref_file_name = 'en.dev'
-    output_file_name = 'en.dev.out'
-
-    # for each sentence
-    #   update configuration
-    #   obtain its transition (i.e. labels) guided by oracle
-    #   based on configuration - transition pairs
-    #   train the model using perceptron
-
-    # initialize weights for features
-    #   identity of word at top of the stack
-    #   identity of word at head of buffer
-    #   coarse POS (field 4) of word at top of the stack
-    #   coarse POS (field 4) of word at head of buffer
-    #   pair of words at top of stack and head of buffer
-    #   pair of coarse POS (field 4) at top of stack and head of buffer
+    train_data = readDataset(train_file_name)
+    dev_data = readDataset(test_file_name)
 
     # define leftArc = 0, rightArc = 1, shift = 2
 
@@ -346,11 +333,11 @@ if __name__ == "__main__":
     # train the model
     for iter in range(10):
         print 'iteration =', iter
-        train_data = readDataset('en.tr100')
+        train_data = readDataset(train_file_name)
         weights = train(train_data, weights)
         # test the model
         test(dev_data, weights, output_file_name)
-        d.eval(ref_file_name, output_file_name)
+        # d.eval(ref_file_name, output_file_name)
 
 
     # testOracleParser(train_data, quiet)
