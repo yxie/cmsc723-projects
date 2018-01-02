@@ -1,5 +1,7 @@
 # cmsc723-projects
 
+Computational Linguistics 1
+
 All projects are implemented using Python 2.7
 
 ## P1: word meaning disambiguation
@@ -16,7 +18,7 @@ We implemented a transition-based dependency parser (arc-standard). Given a sent
 
 This project aims to provide hands on experience with neural models for NLP. In this project, we focus on transliteration from Bulgarian, which is written with the Cyrillic alphabet, into English.
 
-Packages: pytorch
+Packages used: pytorch
 
 
 ## Notice
