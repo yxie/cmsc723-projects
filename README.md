@@ -7,7 +7,6 @@ All projects are implemented using Python 2.7
 We implemented a word meaning disambiguation system based on 1) naive bayes and 2) peceptron. Given a word in a sentence and a set of possible meanings, the system predicts the most possible meaning for the word.
 
 Packages used: ntlk, sklearn, numpy
-Data:
 
 ## P2: dependency parsing
 
